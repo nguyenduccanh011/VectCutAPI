@@ -1,4 +1,4 @@
-"""定义文本片段及其相关类"""
+"""Define text segment class and related classes"""
 
 import json
 import uuid
@@ -17,32 +17,32 @@ from .metadata import Font_type, Effect_meta
 from .metadata import Text_intro, Text_outro, Text_loop_anim
 
 class Text_style:
-    """字体样式类"""
+    """Text style class"""
 
     size: float
-    """字体大小"""
+    """Font size"""
 
     bold: bool
-    """是否加粗"""
+    """Bold or not"""
     italic: bool
-    """是否斜体"""
+    """Italic or not"""
     underline: bool
-    """是否加下划线"""
+    """Underline or not"""
 
     color: Tuple[float, float, float]
-    """字体颜色, RGB三元组, 取值范围为[0, 1]"""
+    """Font color, RGB tuple, value range [0, 1]"""
     alpha: float
-    """字体不透明度"""
+    """Font opacity"""
 
     align: Literal[0, 1, 2]
-    """对齐方式"""
+    """Alignment: 0=left, 1=center, 2=right"""
     vertical: bool
-    """是否为竖排文本"""
+    """Whether vertical text"""
 
     letter_spacing: int
-    """字符间距"""
+    """Letter spacing"""
     line_spacing: int
-    """行间距"""
+    """Line spacing"""
 
     def __init__(self, *, size: float = 8.0, bold: bool = False, italic: bool = False, underline: bool = False,
                  color: Tuple[float, float, float] = (1.0, 1.0, 1.0), alpha: float = 1.0,
@@ -50,16 +50,16 @@ class Text_style:
                  letter_spacing: int = 0, line_spacing: int = 0):
         """
         Args:
-            size (`float`, optional): 字体大小, 默认为8.0
-            bold (`bool`, optional): 是否加粗, 默认为否
-            italic (`bool`, optional): 是否斜体, 默认为否
-            underline (`bool`, optional): 是否加下划线, 默认为否
-            color (`Tuple[float, float, float]`, optional): 字体颜色, RGB三元组, 取值范围为[0, 1], 默认为白色
-            alpha (`float`, optional): 字体不透明度, 取值范围[0, 1], 默认不透明
-            align (`int`, optional): 对齐方式, 0: 左对齐, 1: 居中, 2: 右对齐, 默认为左对齐
-            vertical (`bool`, optional): 是否为竖排文本, 默认为否
-            letter_spacing (`int`, optional): 字符间距, 定义与剪映中一致, 默认为0
-            line_spacing (`int`, optional): 行间距, 定义与剪映中一致, 默认为0
+            size (`float`, optional): Font size, default 8.0
+            bold (`bool`, optional): Bold, default False
+            italic (`bool`, optional): Italic, default False
+            underline (`bool`, optional): Underline, default False
+            color (`Tuple[float, float, float]`, optional): Font color RGB tuple, value range [0, 1], default white
+            alpha (`float`, optional): Font opacity, value range [0, 1], default 1.0
+            align (`int`, optional): Alignment, 0=left, 1=center, 2=right, default left
+            vertical (`bool`, optional): Vertical text, default False
+            letter_spacing (`int`, optional): Letter spacing, default 0
+            line_spacing (`int`, optional): Line spacing, default 0
         """
         self.size = size
         self.bold = bold
@@ -76,28 +76,28 @@ class Text_style:
         self.line_spacing = line_spacing
 
 class Text_border:
-    """文本描边的参数"""
+    """Text border parameters"""
 
     alpha: float
-    """描边不透明度"""
+    """Border opacity"""
     color: Tuple[float, float, float]
-    """描边颜色, RGB三元组, 取值范围为[0, 1]"""
+    """Border color, RGB tuple, value range [0, 1]"""
     width: float
-    """描边宽度"""
+    """Border width"""
 
     def __init__(self, *, alpha: float = 1.0, color: Tuple[float, float, float] = (0.0, 0.0, 0.0), width: float = 40.0):
         """
         Args:
-            alpha (`float`, optional): 描边不透明度, 取值范围[0, 1], 默认为1.0
-            color (`Tuple[float, float, float]`, optional): 描边颜色, RGB三元组, 取值范围为[0, 1], 默认为黑色
-            width (`float`, optional): 描边宽度, 与剪映中一致, 取值范围为[0, 100], 默认为40.0
+            alpha (`float`, optional): Border opacity, value range [0, 1], default 1.0
+            color (`Tuple[float, float, float]`, optional): Border color RGB tuple, value range [0, 1], default black
+            width (`float`, optional): Border width, range [0, 100], default 40.0
         """
         self.alpha = alpha
         self.color = color
-        self.width = width / 100.0 * 0.2  # 此映射可能不完全正确
+        self.width = width / 100.0 * 0.2  # This mapping may not be accurate
 
     def export_json(self) -> Dict[str, Any]:
-        """导出JSON数据, 放置在素材content的styles中"""
+        """Export JSON data, place in material content styles"""
         return {
             "content": {
                 "solid": {

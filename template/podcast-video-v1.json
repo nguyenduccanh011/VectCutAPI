@@ -1,0 +1,193 @@
+{
+  "name": "podcast-video-v1",
+  "version": "2.0.0",
+  "description": "Podcast video: logo + play icon (top), script text (mid), background images slideshow (bottom)",
+
+  "canvas": {
+    "width": 1080,
+    "height": 1920
+  },
+
+  "layers": [
+    {
+      "id": "background",
+      "type": "dynamic_image",
+      "description": "Background images slideshow - thay đổi theo segment",
+      "track_name": "bg_track",
+      "relative_index": 0,
+      "style": {
+        "transform_x": 0,
+        "transform_y": 0,
+        "scale_x": 1.0,
+        "scale_y": 1.0
+      },
+      "transition": {
+        "type": "Dissolve",
+        "duration": 0.5
+      },
+      "motion": {
+        "presets": ["zoom_in", "zoom_out", "pan_left_right", "pan_right_left", "pan_top_down"],
+        "random": true
+      },
+      "background_blur": null
+    },
+
+    {
+      "id": "bg_overlay",
+      "type": "persistent_image",
+      "description": "Dark overlay trên background để text dễ đọc hơn (optional)",
+      "track_name": "overlay_track",
+      "relative_index": 1,
+      "source_key": "overlay_url",
+      "optional": true,
+      "style": {
+        "transform_x": 0,
+        "transform_y": 0,
+        "scale_x": 1.0,
+        "scale_y": 1.0
+      }
+    },
+
+    {
+      "id": "script_text",
+      "type": "dynamic_text",
+      "description": "Script text - thay đổi theo từng segment",
+      "track_name": "text_track",
+      "relative_index": 2,
+      "style": {
+        "font": "Arial",
+        "font_size": 8.0,
+        "font_color": "#FFFFFF",
+        "font_alpha": 1.0,
+        "transform_x": 0,
+        "transform_y": 0.3,
+        "border_width": 1.5,
+        "border_color": "#000000",
+        "border_alpha": 1.0,
+        "shadow_enabled": true,
+        "shadow_color": "#000000",
+        "shadow_alpha": 0.8,
+        "shadow_angle": -45.0,
+        "shadow_distance": 3.0,
+        "shadow_smoothing": 0.15,
+        "background_color": "#000000",
+        "background_alpha": 0.0,
+        "background_style": 0,
+        "background_round_radius": 0.0,
+        "fixed_width": -1,
+        "fixed_height": -1
+      },
+      "intro_animation": null,
+      "intro_duration": 0.3,
+      "outro_animation": null,
+      "outro_duration": 0.3
+    },
+
+    {
+      "id": "title_text",
+      "type": "dynamic_text",
+      "description": "Tiêu đề segment (optional, nếu segment có title)",
+      "track_name": "title_track",
+      "relative_index": 3,
+      "optional": true,
+      "style": {
+        "font": "Arial",
+        "font_size": 12.0,
+        "font_color": "#FFD700",
+        "font_alpha": 1.0,
+        "transform_x": 0,
+        "transform_y": -0.2,
+        "border_width": 2.0,
+        "border_color": "#000000",
+        "border_alpha": 1.0,
+        "shadow_enabled": true,
+        "shadow_color": "#000000",
+        "shadow_alpha": 0.9,
+        "shadow_angle": -45.0,
+        "shadow_distance": 5.0,
+        "shadow_smoothing": 0.15,
+        "background_color": "#000000",
+        "background_alpha": 0.0,
+        "background_style": 0,
+        "fixed_width": -1,
+        "fixed_height": -1
+      },
+      "intro_animation": null,
+      "intro_duration": 0.3,
+      "outro_animation": null,
+      "outro_duration": 0.3
+    },
+
+    {
+      "id": "logo",
+      "type": "persistent_image",
+      "description": "Logo hiển thị xuyên suốt video",
+      "track_name": "logo_track",
+      "relative_index": 4,
+      "source_key": "logo_url",
+      "style": {
+        "transform_x": -0.35,
+        "transform_y": -0.88,
+        "scale_x": 0.15,
+        "scale_y": 0.15
+      }
+    },
+
+    {
+      "id": "play_icon",
+      "type": "persistent_image",
+      "description": "Play icon hiển thị xuyên suốt video",
+      "track_name": "play_track",
+      "relative_index": 4,
+      "source_key": "play_icon_url",
+      "optional": true,
+      "style": {
+        "transform_x": 0.35,
+        "transform_y": -0.88,
+        "scale_x": 0.08,
+        "scale_y": 0.08
+      }
+    }
+  ],
+
+  "motion_presets": {
+    "zoom_in": {
+      "description": "Zoom In: scale 1.0 → 1.25",
+      "keyframes": [
+        {"property": "scale_x", "start": "1.0", "end": "1.25"},
+        {"property": "scale_y", "start": "1.0", "end": "1.25"}
+      ]
+    },
+    "zoom_out": {
+      "description": "Zoom Out: scale 1.25 → 1.0",
+      "keyframes": [
+        {"property": "scale_x", "start": "1.25", "end": "1.0"},
+        {"property": "scale_y", "start": "1.25", "end": "1.0"}
+      ]
+    },
+    "pan_left_right": {
+      "description": "Pan trái → phải",
+      "keyframes": [
+        {"property": "scale_x", "start": "1.15", "end": "1.15"},
+        {"property": "scale_y", "start": "1.15", "end": "1.15"},
+        {"property": "position_x", "start": "-0.08", "end": "0.08"}
+      ]
+    },
+    "pan_right_left": {
+      "description": "Pan phải → trái",
+      "keyframes": [
+        {"property": "scale_x", "start": "1.15", "end": "1.15"},
+        {"property": "scale_y", "start": "1.15", "end": "1.15"},
+        {"property": "position_x", "start": "0.08", "end": "-0.08"}
+      ]
+    },
+    "pan_top_down": {
+      "description": "Pan trên → dưới",
+      "keyframes": [
+        {"property": "scale_x", "start": "1.15", "end": "1.15"},
+        {"property": "scale_y", "start": "1.15", "end": "1.15"},
+        {"property": "position_y", "start": "0.06", "end": "-0.06"}
+      ]
+    }
+  }
+}

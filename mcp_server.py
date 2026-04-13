@@ -29,6 +29,8 @@ try:
     from get_duration_impl import get_video_duration
     from save_draft_impl import save_draft_impl
     from pyJianYingDraft.text_segment import TextStyleRange
+    from video_builder import VideoBuilder, RenderInput
+    from draft_exporter import DraftExporter, LAYER_ROLES
     CAPCUT_AVAILABLE = True
 except ImportError as e:
     print(f"Warning: Could not import CapCut modules: {e}", file=sys.stderr)
@@ -253,6 +255,74 @@ TOOLS = [
                 "draft_id": {"type": "string", "description": "Draft ID"}
             }
         }
+    },
+    {
+        "name": "render_template",
+        "description": "Render video from a layer-based template (e.g. podcast video). Supports: persistent layers (logo, overlay), dynamic image slideshow with zoom/pan effects, dynamic text segments. The template defines layout/style, you provide content segments.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "template_name": {"type": "string", "description": "Template name (e.g. 'podcast-video-v1'). Use list_templates to see available templates."},
+                "segments": {
+                    "type": "array",
+                    "description": "Content segments. Each segment has text, duration, image_url, and optional title.",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "text": {"type": "string", "description": "Main text content for this segment"},
+                            "duration": {"type": "number", "description": "Duration in seconds"},
+                            "image_url": {"type": "string", "description": "Background image URL"},
+                            "title": {"type": "string", "description": "Optional title text"}
+                        },
+                        "required": ["text", "duration", "image_url"]
+                    }
+                },
+                "logo_url": {"type": "string", "description": "Logo image URL (persistent, displayed throughout video)"},
+                "play_icon_url": {"type": "string", "description": "Play icon image URL (optional)"},
+                "overlay_url": {"type": "string", "description": "Dark overlay image URL (optional, placed over background)"}
+            },
+            "required": ["template_name", "segments"]
+        }
+    },
+    {
+        "name": "list_templates",
+        "description": "List available video templates with their layer structure and capabilities.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "detailed": {"type": "boolean", "default": False, "description": "If true, return full layer details for each template"}
+            }
+        }
+    },
+    {
+        "name": "analyze_draft",
+        "description": "Analyze a CapCut draft to see all tracks and their properties (position, scale, font, color, segments count). Use this to understand a draft's structure before exporting as template.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "draft_path": {"type": "string", "description": "Path to CapCut draft folder (containing draft_info.json). If not provided, will look in the default CapCut draft folder."},
+                "draft_name": {"type": "string", "description": "Draft folder name (alternative to draft_path). Will search in default CapCut draft folder."}
+            }
+        }
+    },
+    {
+        "name": "export_draft_template",
+        "description": "Export a CapCut draft as a reusable layer-based template. You must provide role tags for each track to tell the system which track is logo, background, text, etc. Use analyze_draft first to see the tracks.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "draft_path": {"type": "string", "description": "Path to CapCut draft folder"},
+                "draft_name": {"type": "string", "description": "Draft folder name (alternative to draft_path)"},
+                "template_name": {"type": "string", "description": "Name for the exported template (e.g. 'my-podcast-v1')"},
+                "track_roles": {
+                    "type": "object",
+                    "description": "Map of track name/index to role. E.g. {\"0\": \"background\", \"1\": \"logo\", \"2\": \"script_text\"}. Roles: background, overlay, script_text, title_text, logo, play_icon, watermark, skip.",
+                    "additionalProperties": {"type": "string"}
+                },
+                "auto_detect": {"type": "boolean", "default": False, "description": "Auto-detect roles based on track names (convention: bg_track, logo_track, text_track, etc.)"}
+            },
+            "required": ["template_name"]
+        }
     }
 ]
 
@@ -356,6 +426,110 @@ def execute_tool(tool_name: str, arguments: Dict[str, Any]) -> Dict[str, Any]:
                 else:
                     result = {"draft_url": f"https://www.install-ai-guider.top/draft/downloader?draft_id=unknown"}
                 
+            elif tool_name == "render_template":
+                template_name = arguments.get("template_name", "podcast-video-v1")
+                template_path = os.path.join("template", f"{template_name}.json")
+                
+                if not os.path.exists(template_path):
+                    result = {"success": False, "error": f"Template not found: {template_name}"}
+                else:
+                    builder = VideoBuilder(template_path)
+                    render_input = RenderInput.from_dict(arguments)
+                    
+                    from settings.local import DRAFT_FOLDER
+                    draft_folder = arguments.get("draft_folder") or DRAFT_FOLDER
+                    
+                    result = builder.render(render_input, draft_folder=draft_folder)
+                
+            elif tool_name == "list_templates":
+                templates = VideoBuilder.list_templates("template")
+                detailed = arguments.get("detailed", False)
+                
+                if detailed:
+                    for tmpl in templates:
+                        tmpl["preview"] = VideoBuilder.preview_template(tmpl["path"])
+                
+                result = {"templates": templates}
+                
+            elif tool_name == "analyze_draft":
+                draft_path = arguments.get("draft_path")
+                if not draft_path and arguments.get("draft_name"):
+                    from settings.local import DRAFT_FOLDER
+                    draft_path = os.path.join(DRAFT_FOLDER, arguments["draft_name"])
+                
+                if not draft_path:
+                    result = {"success": False, "error": "Provide draft_path or draft_name"}
+                else:
+                    exporter = DraftExporter(draft_path)
+                    tracks = exporter.analyze()
+                    
+                    canvas = exporter.draft_info.get("canvas_config", {})
+                    track_list = []
+                    for i, track in enumerate(tracks):
+                        info = {
+                            "index": i,
+                            "name": track.name,
+                            "type": track.track_type,
+                            "segment_count": track.segment_count,
+                            "duration_sec": round(track.total_duration_sec, 1),
+                            "transform_x": round(track.transform_x, 4),
+                            "transform_y": round(track.transform_y, 4),
+                            "scale_x": round(track.scale_x, 4),
+                            "scale_y": round(track.scale_y, 4),
+                            "suggested_role": exporter._suggest_role(track),
+                        }
+                        if track.font_size:
+                            info["font_size"] = track.font_size
+                            info["font_color"] = track.font_color
+                        if track.transition_type:
+                            info["transition"] = track.transition_type
+                        track_list.append(info)
+                    
+                    result = {
+                        "draft_path": draft_path,
+                        "canvas": {"width": canvas.get("width"), "height": canvas.get("height")},
+                        "tracks": track_list,
+                        "available_roles": list(LAYER_ROLES.keys()),
+                        "hint": "Use export_draft_template with track_roles to tag each track. E.g. track_roles: {\"0\": \"background\", \"1\": \"logo\", \"2\": \"script_text\"}"
+                    }
+            
+            elif tool_name == "export_draft_template":
+                draft_path = arguments.get("draft_path")
+                if not draft_path and arguments.get("draft_name"):
+                    from settings.local import DRAFT_FOLDER
+                    draft_path = os.path.join(DRAFT_FOLDER, arguments["draft_name"])
+                
+                if not draft_path:
+                    result = {"success": False, "error": "Provide draft_path or draft_name"}
+                else:
+                    template_name = arguments.get("template_name", "exported-template")
+                    exporter = DraftExporter(draft_path)
+                    exporter.analyze()
+                    
+                    # Tag tracks
+                    if arguments.get("auto_detect"):
+                        exporter.auto_tag()
+                    
+                    track_roles = arguments.get("track_roles", {})
+                    for name_or_idx, role in track_roles.items():
+                        exporter.tag_track(name_or_idx, role)
+                    
+                    # Export
+                    from draft_exporter import LAYER_ROLES as LR
+                    template = exporter.export_template(template_name, output_dir="template")
+                    
+                    output_path = os.path.join("template", f"{template_name}.json")
+                    result = {
+                        "template_name": template_name,
+                        "template_path": output_path,
+                        "layers": len(template.get("layers", [])),
+                        "layer_summary": [
+                            {"id": l["id"], "type": l["type"], "index": l.get("relative_index", 0)}
+                            for l in template.get("layers", [])
+                        ],
+                        "hint": f"Template saved. Use render_template with template_name='{template_name}' to render videos."
+                    }
+            
             else:
                 return {"success": False, "error": t("unknown_tool", tool_name=tool_name)}
         

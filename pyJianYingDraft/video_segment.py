@@ -1,6 +1,6 @@
-"""定义视频片段及其相关类
+"""Define video segment class and related classes
 
-包含图像调节设置、动画效果、特效、转场等相关类
+Includes image adjustment settings, animation effects, effects, transitions, etc.
 """
 
 import uuid
@@ -26,17 +26,17 @@ from .metadata import Video_scene_effect_type, Video_character_effect_type
 
 
 class Mask:
-    """蒙版对象"""
+    """Mask object"""
 
     mask_meta: Mask_meta
-    """蒙版元数据"""
+    """Mask metadata"""
     global_id: str
-    """蒙版全局id, 由程序自动生成"""
+    """Mask global ID, auto-generated"""
 
     center_x: float
-    """蒙版中心x坐标, 以半素材宽为单位"""
+    """Mask center X coordinate, in half material width units"""
     center_y: float
-    """蒙版中心y坐标, 以半素材高为单位"""
+    """Mask center Y coordinate, in half material height units"""
     width: float
     height: float
     aspect_ratio: float
@@ -44,9 +44,9 @@ class Mask:
     rotation: float
     invert: bool
     feather: float
-    """羽化程度, 0-1"""
+    """Feather level, 0-1"""
     round_corner: float
-    """矩形蒙版的圆角, 0-1"""
+    """Rectangle mask corner radius, 0-1"""
 
     def __init__(self, mask_meta: Mask_meta,
                  cx: float, cy: float, w: float, h: float,

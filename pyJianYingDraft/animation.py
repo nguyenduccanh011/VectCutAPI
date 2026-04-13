@@ -1,4 +1,4 @@
-"""定义视频/文本动画相关类"""
+"""Define video/text animation related classes"""
 
 import uuid
 
@@ -14,24 +14,24 @@ from .metadata import Text_intro, Text_outro, Text_loop_anim
 from .metadata import CapCut_Text_intro, CapCut_Text_loop_anim, CapCut_Text_outro
 
 class Animation:
-    """一个视频/文本动画效果"""
+    """A video/text animation effect"""
 
     name: str
-    """动画名称, 默认取为动画效果的名称"""
+    """Animation name, defaults to the animation effect name"""
     effect_id: str
-    """另一种动画id, 由剪映本身提供"""
+    """Another animation ID, provided by CapCut itself"""
     animation_type: str
-    """动画类型, 在子类中定义"""
+    """Animation type, defined in subclasses"""
     resource_id: str
-    """资源id, 由剪映本身提供"""
+    """Resource ID, provided by CapCut itself"""
 
     start: int
-    """动画相对此片段开头的偏移, 单位为微秒"""
+    """Animation offset from segment start, in microseconds"""
     duration: int
-    """动画持续时间, 单位为微秒"""
+    """Animation duration, in microseconds"""
 
     is_video_animation: bool
-    """是否为视频动画, 在子类中定义"""
+    """Whether this is a video animation, defined in subclasses"""
 
     def __init__(self, animation_meta: Animation_meta, start: int, duration: int):
         self.name = animation_meta.title
@@ -55,11 +55,11 @@ class Animation:
 
             "start": self.start,
             "duration": self.duration,
-            # 不导出path和request_id
+            # Do not export path and request_id
         }
 
 class Video_animation(Animation):
-    """一个视频动画效果"""
+    """A video animation effect"""
 
     animation_type: Literal["in", "out", "group"]
 
@@ -77,7 +77,7 @@ class Video_animation(Animation):
         self.is_video_animation = True
 
 class Text_animation(Animation):
-    """一个文本动画效果"""
+    """A text animation effect"""
 
     animation_type: Literal["in", "out", "loop"]
 
@@ -95,9 +95,9 @@ class Text_animation(Animation):
         self.is_video_animation = False
 
 class Segment_animations:
-    """附加于某素材上的一系列动画
+    """A series of animations attached to a material
 
-    对视频片段：入场、出场或组合动画；对文本片段：入场、出场或循环动画"""
+    For video segments: entrance, exit, or group animation; for text segments: entrance, exit, or loop animation"""
 
     animation_id: str
     """系列动画的全局id, 自动生成"""

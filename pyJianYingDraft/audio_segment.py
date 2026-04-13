@@ -1,6 +1,6 @@
-"""定义音频片段及其相关类
+"""Define audio segment class and related classes
 
-包含淡入淡出效果、音频特效等相关类
+Includes fade effect, audio effects, and related classes
 """
 
 import uuid
@@ -20,18 +20,18 @@ from .metadata import Effect_param_instance
 from .metadata import Audio_scene_effect_type, Tone_effect_type, Speech_to_song_type
 
 class Audio_fade:
-    """音频淡入淡出效果"""
+    """Audio fade in/out effect"""
 
     fade_id: str
-    """淡入淡出效果的全局id, 自动生成"""
+    """Global ID for fade effect, auto-generated"""
 
     in_duration: int
-    """淡入时长, 单位为微秒"""
+    """Fade-in duration, in microseconds"""
     out_duration: int
-    """淡出时长, 单位为微秒"""
+    """Fade-out duration, in microseconds"""
 
     def __init__(self, in_duration: int, out_duration: int):
-        """根据给定的淡入/淡出时长构造一个淡入淡出效果"""
+        """Construct fade effect with given fade-in/out durations"""
 
         self.fade_id = uuid.uuid4().hex
         self.in_duration = in_duration
@@ -47,23 +47,23 @@ class Audio_fade:
         }
 
 class Audio_effect:
-    """音频特效对象"""
+    """Audio effect object"""
 
     name: str
-    """特效名称"""
+    """Effect name"""
     effect_id: str
-    """特效全局id, 由程序自动生成"""
+    """Effect global ID, auto-generated"""
     resource_id: str
-    """资源id, 由剪映本身提供"""
+    """Resource ID, provided by CapCut"""
 
     category_id: Literal["sound_effect", "tone", "speech_to_song"]
-    category_name: Literal["场景音", "音色", "声音成曲"]
+    category_name: Literal["Scene sound", "Tone", "Speech to song"]
 
     audio_adjust_params: List[Effect_param_instance]
 
     def __init__(self, effect_meta: Union[Audio_scene_effect_type, Tone_effect_type, Speech_to_song_type, CapCut_Voice_filters_effect_type, CapCut_Voice_characters_effect_type, CapCut_Speech_to_song_effect_type],
                  params: Optional[List[Optional[float]]] = None):
-        """根据给定的音效元数据及参数列表构造一个音频特效对象, params的范围是0~100"""
+        """Construct audio effect with given metadata and param list, param range 0~100"""
 
         self.name = effect_meta.value.name
         self.effect_id = uuid.uuid4().hex
@@ -72,13 +72,13 @@ class Audio_effect:
 
         if isinstance(effect_meta, Audio_scene_effect_type):
             self.category_id = "sound_effect"
-            self.category_name = "场景音"
+            self.category_name = "Scene sound"
         elif isinstance(effect_meta, Tone_effect_type):
             self.category_id = "tone"
-            self.category_name = "音色"
+            self.category_name = "Tone"
         elif isinstance(effect_meta, Speech_to_song_type):
             self.category_id = "speech_to_song"
-            self.category_name = "声音成曲"
+            self.category_name = "Speech to song"
         elif isinstance(effect_meta, CapCut_Voice_filters_effect_type):
             self.category_id = "sound_effect"
             self.category_name = "Voice filters"
@@ -89,7 +89,7 @@ class Audio_effect:
             self.category_id = "speech_to_song"
             self.category_name = "Speech to song"
         else:
-            raise TypeError("不支持的元数据类型 %s" % type(effect_meta))
+            raise TypeError("Unsupported metadata type %s" % type(effect_meta))
 
         self.audio_adjust_params = effect_meta.value.parse_params(params)
 

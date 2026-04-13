@@ -1,41 +1,41 @@
-# CapCut API MCP Server Documentation
+# CapCut API MCP Server User Guide
 
 ## Overview
 
-The CapCut API MCP Server is a video editing service based on the Model Context Protocol (MCP), providing complete CapCut video editing functionality interfaces. Through the MCP protocol, you can easily integrate professional-grade video editing capabilities into various applications.
+The CapCut API MCP Server is a video editing service based on the Model Context Protocol (MCP), providing a complete interface for CapCut video editing functions. Through the MCP protocol, you can easily integrate professional-grade video editing capabilities into various applications.
 
 ## Features
 
-### 🎬 Core Capabilities
+### 🎬 Core Functionality
 - **Draft Management**: Create, save, and manage video projects
 - **Multimedia Support**: Video, audio, image, and text processing
-- **Advanced Effects**: Effects, animations, transitions, and filters
-- **Precise Control**: Timeline, keyframes, and layer management
+- **Advanced Effects**: Visual effects, animations, transitions, and filters
+- **Precise Control**: Timeline management, keyframe control, layer management
 
-### 🛠️ Available Tools (11 Tools)
+### 🛠️ Available Tools (11 total)
 
-| Tool Name | Description | Key Parameters |
-|-----------|-------------|----------------|
+| Tool Name | Function | Main Parameters |
+|---------|----------|----------|
 | `create_draft` | Create new video draft project | width, height |
-| `add_text` | Add text elements | text, font_size, color, shadow, background |
+| `add_text` | Add text element | text, font_size, color, shadow, background |
 | `add_video` | Add video track | video_url, start, end, transform, volume |
 | `add_audio` | Add audio track | audio_url, volume, speed, effects |
-| `add_image` | Add image assets | image_url, transform, animation, transition |
-| `add_subtitle` | Add subtitle files | srt_path, font_style, position |
-| `add_effect` | Add visual effects | effect_type, parameters, duration |
-| `add_sticker` | Add sticker elements | resource_id, position, scale, rotation |
-| `add_video_keyframe` | Add keyframe animations | property_types, times, values |
+| `add_image` | Add image material | image_url, transform, animation, transition |
+| `add_subtitle` | Add subtitle file | srt_path, font_style, position |
+| `add_effect` | Add visual effect | effect_type, parameters, duration |
+| `add_sticker` | Add sticker element | resource_id, position, scale, rotation |
+| `add_video_keyframe` | Add keyframe animation | property_types, times, values |
 | `get_video_duration` | Get video duration | video_url |
 | `save_draft` | Save draft project | draft_id |
 
-## Installation & Setup
+## Installation & Configuration
 
-### Requirements
+### System Requirements
 - Python 3.10+
-- CapCut Application (macOS/Windows)
-- MCP Client Support
+- CapCut application (macOS/Windows)
+- MCP client support
 
-### Dependencies Installation
+### Dependency Installation
 ```bash
 # Create virtual environment
 python3.10 -m venv venv-mcp
