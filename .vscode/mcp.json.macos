@@ -2,7 +2,7 @@
   "servers": {
     "capcut-api": {
       "type": "stdio",
-      "command": ".vscode/run-mcp.cmd",
+      "command": ".vscode/run-mcp.sh",
       "cwd": "${workspaceFolder}",
       "env": {
         "PYTHONPATH": "${workspaceFolder}"
