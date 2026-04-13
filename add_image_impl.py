@@ -90,24 +90,27 @@ def add_image_impl(
         height=height
     )
     
-    # Check if video track exists, if not, add a default video track
-    try:
-        script.get_track(draft.Track_type.video, track_name=None)
-    except exceptions.TrackNotFound:
-        script.add_track(draft.Track_type.video, relative_index=0)
-    except NameError:
-        # If multiple video tracks exist (NameError), do nothing
-        pass
+    # Check if any video track exists (by track_type enum, not segment class)
+    video_track_exists = any(
+        t.track_type == draft.Track_type.video
+        for t in list(script.tracks.values()) + list(script.imported_tracks)
+    )
+    auto_track_name = draft.Track_type.video.name  # = "video"
 
-    # Add video track (only when track doesn't exist)
+    # Create default unnamed ("video") track only when:
+    # - no video track exists yet, AND
+    # - the requested track_name is NOT the same as the auto track name
+    if not video_track_exists and track_name != auto_track_name:
+        script.add_track(draft.Track_type.video, relative_index=0)
+
+    # Create the named track if it doesn't exist yet
     if track_name is not None:
-        try:
-            imported_track=script.get_imported_track(draft.Track_type.video, name=track_name)
-            # If no exception is thrown, the track already exists
-        except exceptions.TrackNotFound:
-            # Track doesn't exist, create a new track
+        track_exists = (track_name in script.tracks) or any(
+            t.name == track_name for t in script.imported_tracks
+        )
+        if not track_exists:
             script.add_track(draft.Track_type.video, track_name=track_name, relative_index=relative_index)
-    else:
+    elif not video_track_exists:
         script.add_track(draft.Track_type.video, relative_index=relative_index)
     
     # Generate material_name but don't download the image
