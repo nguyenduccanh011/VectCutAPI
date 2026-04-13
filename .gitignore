@@ -5,7 +5,6 @@ build/
 dist/
 *.egg-info/
 
-.vscode/
 .idea/
 .DS_Store
 
