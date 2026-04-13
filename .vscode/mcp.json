@@ -1,0 +1,13 @@
+{
+  "servers": {
+    "capcut-api": {
+      "type": "stdio",
+      "command": "python",
+      "args": ["mcp_server.py"],
+      "cwd": "D:/PROJECTS/VectCutAPI",
+      "env": {
+        "PYTHONPATH": "D:/PROJECTS/VectCutAPI"
+      }
+    }
+  }
+}
