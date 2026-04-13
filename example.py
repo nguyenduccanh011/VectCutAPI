@@ -16,7 +16,7 @@ import os
 BASE_URL = f"http://localhost:{PORT}"
 LICENSE_KEY = "trial"  # Trial license key
 
-CAPCUT_DRAFT_FOLDER = "C:/Users/DUC CANH PC/AppData/Local/CapCut/User Data/Projects/com.lveditor.draft"
+CAPCUT_DRAFT_FOLDER = "C:/Users/DELL/AppData/Local/CapCut/User Data/Projects/com.lveditor.draft"
 JIANYINGPRO_DRAFT_FOLDER = "/Users/sunguannan/Movies/JianyingPro/User Data/Projects/com.lveditor.draft"
 
 def make_request(endpoint, data, method='POST'):

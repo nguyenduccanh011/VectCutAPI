@@ -1,70 +1,70 @@
-# VectCutAPI Skill 使用指南
+# Hướng dẫn sử dụng VectCutAPI Skill
 
-## 目录
+## Mục lục
 
-1. [安装指南](#安装指南)
-2. [快速开始](#快速开始)
-3. [Claude Code 中使用](#claude-code-中使用)
-4. [Python 客户端使用](#python-客户端使用)
-5. [常见场景示例](#常见场景示例)
-6. [故障排除](#故障排除)
-7. [最佳实践](#最佳实践)
+1. [Hướng dẫn cài đặt](#hướng-dẫn-cài-đặt)
+2. [Bắt đầu nhanh](#bắt-đầu-nhanh)
+3. [Sử dụng trong Claude Code](#sử-dụng-trong-claude-code)
+4. [Sử dụng client Python](#sử-dụng-client-python)
+5. [Ví dụ các trường hợp](#ví-dụ-các-trường-hợp)
+6. [Khắc phục sự cố](#khắc-phục-sự-cố)
+7. [Thực hành tốt nhất](#thực-hành-tốt-nhất)
 
 ---
 
-## 安装指南
+## Hướng dẫn cài đặt
 
-### 前置要求
+### Yêu cầu tiên quyết
 
-在开始之前，请确保已安装：
+Trước khi bắt đầu, hãy đảm bảo bạn đã cài đặt:
 
-- **Python 3.10+** - [下载链接](https://www.python.org/downloads/)
-- **Claude Code** - Anthropic 官方 CLI 工具
-- **剪映** 或 **CapCut 国际版**
-- **Git** - 用于克隆项目
+- **Python 3.10+** - [Liên kết tải xuống](https://www.python.org/downloads/)
+- **Claude Code** - Công cụ CLI chính thức của Anthropic
+- **CapCut** hoặc **Jianying** (phần mềm chỉnh sửa video)
+- **Git** - Để clone dự án
 
-### 步骤 1: 安装 VectCutAPI
+### Bước 1: Cài đặt VectCutAPI
 
-VectCutAPI 是本技能依赖的核心服务，必须先安装并运行。
+VectCutAPI là dịch vụ inti được kỹ năng này phụ thuộc, phải được cài đặt và chạy trước.
 
 ```bash
-# 1. 克隆 VectCutAPI 项目
-git clone https://github.com/sun-guannan/VectCutAPI.git
+# 1. Clone dự án VectCutAPI
+git clone https://github.com/nguyenduccanh011/VectCutAPI.git
 cd VectCutAPI
 
-# 2. 创建虚拟环境 (推荐)
+# 2. Tạo môi trường ảo (khuyên dùng)
 python -m venv venv-vectcut
 
-# Windows 激活虚拟环境
+# Kích hoạt môi trường ảo trên Windows
 venv-vectcut\Scripts\activate
 
-# Linux/macOS 激活虚拟环境
+# Kích hoạt môi trường ảo trên Linux/macOS
 source venv-vectcut/bin/activate
 
-# 3. 安装依赖
-pip install -r requirements.txt      # HTTP API 基础依赖
-pip install -r requirements-mcp.txt  # MCP 协议支持 (可选)
+# 3. Cài đặt các phụ thuộc
+pip install -r requirements.txt      # Phụ thuộc cơ bản cho HTTP API
+pip install -r requirements-mcp.txt  # Hỗ trợ giao thức MCP (tùy chọn)
 
-# 4. 配置文件
+# 4. Tệp cấu hình
 cp config.json.example config.json
 
-# 5. 编辑 config.json (可选)
-# 根据需要修改配置，如端口、OSS 设置等
+# 5. Chỉnh sửa config.json (tùy chọn)
+# Sửa đổi cấu hình tùy theo nhu cầu, chẳng hạn như cổng, cài đặt OSS, v.v.
 
-# 6. 启动服务
+# 6. Khởi động dịch vụ
 python capcut_server.py
 ```
 
-服务启动后，默认监听 `http://localhost:9001`
+Sau khi dịch vụ được khởi động, nó sẽ lắng nghe tại `http://localhost:9001`
 
-### 步骤 2: 安装 Skill
+### Bước 2: Cài đặt Skill
 
 ```bash
-# 1. 克隆本项目
+# 1. Clone dự án này
 git clone https://github.com/your-username/vectcut-skill.git
 cd vectcut-skill
 
-# 2. 复制 skill 文件到 Claude Code 技能目录
+# 2. Sao chép các tệp kỹ năng vào thư mục kỹ năng Claude Code
 
 # Windows (PowerShell)
 Copy-Item -Path "skill\*" -Destination "$env:USERPROFILE\.claude\skills\public\vectcut-api\" -Recurse -Force
@@ -76,10 +76,10 @@ xcopy "skill\*" "%USERPROFILE%\.claude\skills\public\vectcut-api\" /E /I /Y
 cp -r skill/* ~/.claude/skills/public/vectcut-api/
 ```
 
-### 步骤 3: 验证安装
+### Bước 3: Xác minh cài đặt
 
 ```bash
-# 检查 skill 目录是否存在
+# Kiểm tra xem thư mục kỹ năng có tồn tại không
 # Windows
 dir %USERPROFILE%\.claude\skills\public\vectcut-api
 
@@ -87,7 +87,7 @@ dir %USERPROFILE%\.claude\skills\public\vectcut-api
 ls ~/.claude/skills/public/vectcut-api
 ```
 
-应该看到以下文件：
+Bạn nên thấy các tệp sau:
 - `SKILL.md`
 - `scripts/vectcut_client.py`
 - `references/api_reference.md`
@@ -95,98 +95,98 @@ ls ~/.claude/skills/public/vectcut-api
 
 ---
 
-## 快速开始
+## Bắt đầu nhanh
 
-### 测试 VectCutAPI 服务
+### Kiểm tra dịch vụ VectCutAPI
 
 ```bash
-# 在新终端中测试 API
+# Kiểm tra API trong terminal mới
 curl http://localhost:9001/
 
-# 或者使用浏览器访问
+# Hoặc truy cập trình duyệt
 # http://localhost:9001/
 ```
 
-应该看到 API 文档页面。
+Bạn nên thấy trang tài liệu API.
 
-### 测试 Python 客户端
+### Kiểm tra client Python
 
 ```python
 from skill.scripts.vectcut_client import VectCutClient
 
-# 创建客户端
+# Tạo client
 client = VectCutClient("http://localhost:9001")
 
-# 创建草稿
+# Tạo bản nháp
 draft = client.create_draft(width=1080, height=1920)
-print(f"草稿 ID: {draft.draft_id}")
+print(f"ID bản nháp: {draft.draft_id}")
 
-# 保存草稿
+# Lưu bản nháp
 result = client.save_draft(draft.draft_id)
-print(f"草稿 URL: {result.draft_url}")
+print(f"URL bản nháp: {result.draft_url}")
 ```
 
 ---
 
-## Claude Code 中使用
+## Sử dụng trong Claude Code
 
-### 自动触发
+### Kích hoạt tự động
 
-当你提到以下关键词时，Claude Code 会自动加载 vectcut-api 技能：
+Khi bạn đề cập đến các từ khóa sau, Claude Code sẽ tự động tải kỹ năng vectcut-api:
 
-- "创建视频草稿"
-- "视频剪辑"
-- "添加视频轨道"
-- "添加文字到视频"
+- "tạo bản nháp video"
+- "chỉnh sửa video"
+- "thêm video track"
+- "thêm text vào video"
 - "VectCutAPI"
-- "剪映草稿"
+- "bản nháp Jianying"
 
-### 示例对话
-
-```
-用户: 我需要创建一个 1080x1920 的竖屏视频，包含背景视频和标题文字
-
-Claude: 我来帮你创建这个视频。首先，我会使用 VectCutAPI 创建草稿...
-
-[自动加载 vectcut-api skill]
-
-1. 创建草稿项目 (1080x1920)
-2. 添加背景视频
-3. 添加标题文字
-4. 保存草稿
-
-请提供以下信息：
-- 背景视频的 URL 或本地路径
-- 标题文字内容
-```
-
-### 手动指定 Skill
-
-如果自动触发失败，可以手动指定：
+### Ví dụ cuộc hội thoại
 
 ```
-用户: 使用 vectcut-api skill 创建一个视频草稿
+Người dùng: Tôi cần tạo video dọc 1080x1920, bao gồm video nền và tiêu đề
+
+Claude: Tôi sẽ giúp bạn tạo video này. Trước tiên, tôi sẽ sử dụng VectCutAPI để tạo bản nháp...
+
+[Tự động tải kỹ năng vectcut-api]
+
+1. Tạo dự án bản nháp (1080x1920)
+2. Thêm video nền
+3. Thêm tiêu đề text
+4. Lưu bản nháp
+
+Vui lòng cung cấp thông tin sau:
+- URL hoặc đường dẫn cục bộ của video nền
+- Nội dung tiêu đề text
+```
+
+### Chỉ định Skill thủ công
+
+Nếu kích hoạt tự động không thành công, bạn có thể chỉ định thủ công:
+
+```
+Người dùng: Sử dụng kỹ năng vectcut-api để tạo một bản nháp video
 ```
 
 ---
 
-## Python 客户端使用
+## Sử dụng client Python
 
-### 基础用法
+### Cách sử dụng cơ bản
 
 ```python
 from skill.scripts.vectcut_client import VectCutClient, Resolution, Transition
 
-# 创建客户端
+# Tạo client
 with VectCutClient("http://localhost:9001") as client:
 
-    # 创建草稿
+    # Tạo bản nháp
     draft = client.create_draft(
         width=Resolution.VERTICAL.value[0],
         height=Resolution.VERTICAL.value[1]
     )
 
-    # 添加视频
+    # Thêm video
     client.add_video(
         draft_id=draft.draft_id,
         video_url="https://example.com/video.mp4",
@@ -194,10 +194,10 @@ with VectCutClient("http://localhost:9001") as client:
         transition=Transition.FADE_IN.value
     )
 
-    # 添加文字
+    # Thêm text
     client.add_text(
         draft_id=draft.draft_id,
-        text="标题文字",
+        text="Tiêu đề",
         start=0,
         end=5,
         font_size=56,
@@ -205,41 +205,41 @@ with VectCutClient("http://localhost:9001") as client:
         shadow_enabled=True
     )
 
-    # 保存草稿
+    # Lưu bản nháp
     result = client.save_draft(draft.draft_id)
-    print(f"草稿已保存: {result.draft_url}")
+    print(f"Bản nháp đã lưu: {result.draft_url}")
 ```
 
-### 使用预设值
+### Sử dụng các giá trị cài sẵn
 
 ```python
 from skill.scripts.vectcut_client import VectCutClient, Resolution, Transition, TextAnimation
 
 with VectCutClient() as client:
-    # 使用预设分辨率
+    # Sử dụng độ phân giải cài sẵn
     draft = client.create_draft(
         width=Resolution.VERTICAL.value[0],
         height=Resolution.VERTICAL.value[1]
     )
 
-    # 使用预设转场
+    # Sử dụng hiệu ứng chuyển cảnh cài sẵn
     client.add_video(
         draft.draft_id,
         "video.mp4",
         transition=Transition.FADE_IN.value
     )
 
-    # 使用预设文字动画
+    # Sử dụng hiệu ứng động text cài sẵn
     client.add_text(
         draft.draft_id,
-        "Hello",
+        "Xin chào",
         start=0,
         end=3,
         text_intro=TextAnimation.ZOOM_IN.value
     )
 ```
 
-### 错误处理
+### Xử lý lỗi
 
 ```python
 from skill.scripts.vectcut_client import VectCutClient
@@ -249,52 +249,52 @@ try:
     draft = client.create_draft()
 
     if client.add_video(draft.draft_id, "video.mp4"):
-        print("视频添加成功")
+        print("Video thêm thành công")
     else:
-        print("视频添加失败")
+        print("Thêm video thất bại")
 
 except Exception as e:
-    print(f"发生错误: {e}")
+    print(f"Lỗi xảy ra: {e}")
 finally:
     client.close()
 ```
 
 ---
 
-## 常见场景示例
+## Ví dụ các trường hợp
 
-### 场景 1: 短视频制作
+### Trường hợp 1: Tạo video ngắn
 
 ```python
 from skill.scripts.vectcut_client import create_quick_video, Resolution
 
-# 快速创建短视频
+# Tạo video ngắn nhanh chóng
 video_url = create_quick_video(
     base_url="http://localhost:9001",
     video_url="https://example.com/bg.mp4",
-    text_content="欢迎关注我的频道",
+    text_content="Hãy theo dõi kênh của tôi",
     bgm_url="https://example.com/bgm.mp3",
     resolution=Resolution.VERTICAL
 )
 
-print(f"视频已生成: {video_url}")
+print(f"Video đã được tạo: {video_url}")
 ```
 
-### 场景 2: AI 文字转视频
+### Trường hợp 2: Chuyển đổi text thành video bằng AI
 
 ```python
 from skill.scripts.vectcut_client import VectCutClient
 
 def text_to_video(text_lines, bg_video, bgm):
-    """将文字转换为视频"""
+    """Chuyển đổi văn bản thành video"""
     with VectCutClient() as client:
         draft = client.create_draft(1080, 1920)
 
-        # 添加背景视频和音乐
+        # Thêm video nền và nhạc
         client.add_video(draft.draft_id, bg_video, volume=0.4)
         client.add_audio(draft.draft_id, bgm, volume=0.3)
 
-        # 添加文字
+        # Thêm text
         colors = ["#FF6B6B", "#4ECDC4", "#45B7D1", "#FFA07A"]
         for i, line in enumerate(text_lines):
             client.add_text(
@@ -308,25 +308,25 @@ def text_to_video(text_lines, bg_video, bgm):
                 background_alpha=0.6
             )
 
-        # 保存
+        # Lưu
         result = client.save_draft(draft.draft_id)
         return result.draft_url
 
-# 使用
+# Sử dụng
 video_url = text_to_video(
-    ["第一段文字", "第二段文字", "第三段文字"],
+    ["Dòng văn bản 1", "Dòng văn bản 2", "Dòng văn bản 3"],
     "bg.mp4",
     "bgm.mp3"
 )
 ```
 
-### 场景 3: 视频混剪
+### Trường hợp 3: Ghép video
 
 ```python
 from skill.scripts.vectcut_client import VectCutClient, Transition
 
 def create_mashup(video_clips):
-    """创建视频混剪"""
+    """Tạo ghép video"""
     with VectCutClient() as client:
         draft = client.create_draft(1080, 1920)
 
@@ -354,7 +354,7 @@ def create_mashup(video_clips):
         result = client.save_draft(draft.draft_id)
         return result.draft_url
 
-# 使用
+# Sử dụng
 clips = [
     {"url": "clip1.mp4", "duration": 5},
     {"url": "clip2.mp4", "duration": 4},
@@ -364,20 +364,20 @@ clips = [
 video_url = create_mashup(clips)
 ```
 
-### 场景 4: 带字幕的视频
+### Trường hợp 4: Video có phụ đề
 
 ```python
 from skill.scripts.vectcut_client import VectCutClient
 
 def add_subtitles_to_video(video_url, srt_url):
-    """为视频添加字幕"""
+    """Thêm phụ đề vào video"""
     with VectCutClient() as client:
         draft = client.create_draft(1920, 1080)
 
-        # 添加视频
+        # Thêm video
         client.add_video(draft.draft_id, video_url)
 
-        # 添加字幕
+        # Thêm phụ đề
         client.add_subtitle(
             draft_id=draft.draft_id,
             srt_url=srt_url,
@@ -391,31 +391,31 @@ def add_subtitles_to_video(video_url, srt_url):
         result = client.save_draft(draft.draft_id)
         return result.draft_url
 
-# 使用
+# Sử dụng
 video_url = add_subtitles_to_video("video.mp4", "subtitles.srt")
 ```
 
 ---
 
-## 故障排除
+## Khắc phục sự cố
 
-### 问题 1: VectCutAPI 服务无法启动
+### Vấn đề 1: Dịch vụ VectCutAPI không thể khởi động
 
-**症状**: 运行 `python capcut_server.py` 时出错
+**Triệu chứng**: Lỗi khi chạy `python capcut_server.py`
 
-**解决方案**:
+**Giải pháp**:
 
-1. 检查 Python 版本 (需要 3.10+)
+1. Kiểm tra phiên bản Python (cần 3.10+)
    ```bash
    python --version
    ```
 
-2. 重新安装依赖
+2. Cài đặt lại các phụ thuộc
    ```bash
    pip install -r requirements.txt
    ```
 
-3. 检查端口占用
+3. Kiểm tra cổng đang được sử dụng
    ```bash
    # Windows
    netstat -ano | findstr :9001
@@ -424,66 +424,66 @@ video_url = add_subtitles_to_video("video.mp4", "subtitles.srt")
    lsof -i :9001
    ```
 
-### 问题 2: Claude Code 不识别 Skill
+### Vấn đề 2: Claude Code không nhận diện Skill
 
-**症状**: Claude 没有自动加载 vectcut-api skill
+**Triệu chứng**: Claude không tự động tải kỹ năng vectcut-api
 
-**解决方案**:
+**Giải pháp**:
 
-1. 检查 skill 目录位置
+1. Kiểm tra vị trí thư mục kỹ năng
    ```bash
-   # 应该在以下路径
+   # Nên ở đường dẫn sau
    ~/.claude/skills/public/vectcut-api/
-   # 或
+   # hoặc
    %USERPROFILE%\.claude\skills\public\vectcut-api\
    ```
 
-2. 检查 SKILL.md 格式
-   - 确保 YAML frontmatter 正确
-   - 确保 name 和 description 字段存在
+2. Kiểm tra định dạng SKILL.md
+   - Đảm bảo YAML frontmatter đúng
+   - Đảm bảo các trường name và description tồn tại
 
-3. 重启 Claude Code
+3. Khởi động lại Claude Code
 
-### 问题 3: API 请求失败
+### Vấn đề 3: Yêu cầu API thất bại
 
-**症状**: 客户端返回错误
+**Triệu chứng**: Client trả về lỗi
 
-**解决方案**:
+**Giải pháp**:
 
-1. 检查 VectCutAPI 服务是否运行
+1. Kiểm tra dịch vụ VectCutAPI có đang chạy không
    ```bash
    curl http://localhost:9001/
    ```
 
-2. 检查网络连接
+2. Kiểm tra kết nối mạng
    ```bash
    ping localhost
    ```
 
-3. 查看服务日志
+3. Xem nhật ký dịch vụ
 
-### 问题 4: 草稿文件无法导入剪映
+### Vấn đề 4: File bản nháp không thể nhập vào Jianying/CapCut
 
-**症状**: 生成的草稿文件在剪映中看不到
+**Triệu chứng**: File bản nháp được tạo không hiển thị trong Jianying/CapCut
 
-**解决方案**:
+**Giải pháp**:
 
-1. 确认剪映/CapCut 草稿目录位置：
-   - **Windows**: `C:\Users\用户名\AppData\Local\JianyingPro\User Data\Projects\`
+1. Xác nhận vị trí thư mục bản nháp Jianying/CapCut:
+   - **Windows**: `C:\Users\Tên người dùng\AppData\Local\JianyingPro\User Data\Projects\`
    - **Mac**: `~/Movies/JianyingPro/User Data/Projects/`
 
-2. 将 `dfd_xxxxx` 文件夹复制到上述目录
+2. Sao chép folder `dfd_xxxxx` vào thư mục trên
 
-3. 重启剪映/CapCut
+3. Khởi động lại Jianying/CapCut
 
 ---
 
-## 最佳实践
+## Thực hành tốt nhất
 
-### 1. 时间轴管理
+### 1. Quản lý Timeline
 
 ```python
-# 好的做法：使用变量跟踪时间
+# Cách tốt: Sử dụng biến để theo dõi thời gian
 current_time = 0
 duration_per_clip = 5
 
@@ -496,42 +496,42 @@ for clip in clips:
     )
     current_time += duration_per_clip
 
-# 避免：硬编码时间
+# Tránh: Hardcode thời gian
 client.add_video(draft.draft_id, clip1, target_start=0)
 client.add_video(draft.draft_id, clip2, target_start=5)
 client.add_video(draft.draft_id, clip3, target_start=10)
 ```
 
-### 2. 错误处理
+### 2. Xử lý lỗi
 
 ```python
-# 好的做法：完整的错误处理
+# Cách tốt: Xử lý lỗi hoàn chỉnh
 try:
     draft = client.create_draft()
     if not client.add_video(draft.draft_id, video_url):
-        print(f"添加视频失败: {video_url}")
+        print(f"Thêm video thất bại: {video_url}")
 except Exception as e:
-    print(f"发生错误: {e}")
+    print(f"Lỗi xảy ra: {e}")
 ```
 
-### 3. 资源清理
+### 3. Dọn dẹp tài nguyên
 
 ```python
-# 好的做法：使用上下文管理器
+# Cách tốt: Sử dụng context manager
 with VectCutClient() as client:
-    # 操作...
-    pass  # 自动关闭连接
+    # Các thao tác...
+    pass  # Tự động đóng kết nối
 
-# 避免：忘记关闭
+# Tránh: Quên đóng
 client = VectCutClient()
-# 操作...
-# 忘记调用 client.close()
+# Các thao tác...
+# Quên gọi client.close()
 ```
 
-### 4. 配置管理
+### 4. Quản lý cấu hình
 
 ```python
-# 好的做法：使用配置文件
+# Cách tốt: Sử dụng file cấu hình
 import json
 
 with open("video_config.json") as f:
@@ -544,14 +544,14 @@ draft = client.create_draft(
 )
 ```
 
-### 5. 批量操作
+### 5. Thao tác hàng loạt
 
 ```python
-# 好的做法：批量添加素材
+# Cách tốt: Thêm các tài nguyên hàng loạt
 texts = [
-    {"text": "标题", "size": 64, "color": "#FFD700"},
-    {"text": "副标题", "size": 48, "color": "#FFFFFF"},
-    {"text": "说明", "size": 36, "color": "#CCCCCC"}
+    {"text": "Tiêu đề", "size": 64, "color": "#FFD700"},
+    {"text": "Phụ đề", "size": 48, "color": "#FFFFFF"},
+    {"text": "Ghi chú", "size": 36, "color": "#CCCCCC"}
 ]
 
 for text_config in texts:
@@ -560,23 +560,23 @@ for text_config in texts:
 
 ---
 
-## 进阶技巧
+## Kỹ thuật nâng cao
 
-### 1. 使用预检查
+### 1. Sử dụng kiểm tra trước
 
 ```python
-# 在创建视频前检查媒体时长
+# Kiểm tra thời lượng media trước khi tạo video
 duration = client.get_duration(media_url)
 if duration:
-    print(f"媒体时长: {duration} 秒")
+    print(f"Thời lượng media: {duration} giây")
 else:
-    print("无法获取媒体时长")
+    print("Không thể lấy thời lượng media")
 ```
 
-### 2. 动态参数构建
+### 2. Xây dựng tham số động
 
 ```python
-# 根据条件动态构建参数
+# Xây dựng tham số động dựa trên điều kiện
 video_params = {
     "draft_id": draft.draft_id,
     "video_url": video_url
@@ -592,13 +592,13 @@ if needs_volume_adjust:
 client.add_video(**video_params)
 ```
 
-### 3. 创建可复用的函数
+### 3. Tạo hàm có thể tái sử dụng
 
 ```python
 def create_title_card(client, draft_id, title, subtitle=""):
-    """创建标题卡片"""
+    """Tạo card tiêu đề"""
     client.add_text(
-        draft.draft_id,
+        draft_id,
         title,
         start=0,
         end=3,
@@ -609,7 +609,7 @@ def create_title_card(client, draft_id, title, subtitle=""):
 
     if subtitle:
         client.add_text(
-            draft.draft_id,
+            draft_id,
             subtitle,
             start=1,
             end=4,
@@ -617,15 +617,15 @@ def create_title_card(client, draft_id, title, subtitle=""):
             pos_y=0.1
         )
 
-# 使用
-create_title_card(client, draft.draft_id, "主标题", "副标题")
+# Sử dụng
+create_title_card(client, draft.draft_id, "Tiêu đề chính", "Tiêu đề phụ")
 ```
 
 ---
 
-## 相关资源
+## Tài nguyên liên quan
 
-- [VectCutAPI GitHub](https://github.com/sun-guannan/VectCutAPI)
-- [API 参考文档](skill/references/api_reference.md)
-- [工作流示例](skill/references/workflows.md)
-- [技术架构](ARCHITECTURE.md)
+- [VectCutAPI GitHub](https://github.com/nguyenduccanh011/VectCutAPI)
+- [Tài liệu tham chiếu API](skill/references/api_reference.md)
+- [Ví dụ quy trình](skill/references/workflows.md)
+- [Kiến trúc kỹ thuật](ARCHITECTURE.md)

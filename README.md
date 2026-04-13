@@ -71,7 +71,7 @@ Enjoy It!  😀😀😀
 
 ```bash
 # 1. Clone the project
-git clone https://github.com/sun-guannan/VectCutAPI.git
+git clone https://github.com/nguyenduccanh011/VectCutAPI.git
 cd VectCutAPI
 
 # 2. Create a virtual environment (recommended)
@@ -132,8 +132,8 @@ Notes:
 - Update exclusions in `scripts/check_cjk.py` if you add bilingual files.
 
 ## Skill Integration Guide
-[Skill Chinese Guide](https://github.com/sun-guannan/VectCutAPI/blob/main/vectcut-skill/README.md)
-[Skill Guide](https://github.com/sun-guannan/VectCutAPI/blob/main/vectcut-skill/README_EN.md)
+[Skill Chinese Guide](https://github.com/nguyenduccanh011/VectCutAPI/blob/main/vectcut-skill/README.md)
+[Skill Guide](https://github.com/nguyenduccanh011/VectCutAPI/blob/main/vectcut-skill/README_EN.md)
 
 ## MCP Integration Guide
 
