@@ -8,7 +8,7 @@ import json
 sys.path.append('/Users/sunguannan/capcutapi')
 from example import add_image_impl
 
-PORT=9001       #端口
+PORT=9001       # API port
 BASE_URL = f"http://localhost:{PORT}"
 draft_folder = "/Users/sunguannan/Movies/JianyingPro/User Data/Projects/com.lveditor.draft"
 
@@ -155,7 +155,7 @@ def add_text_impl(text, start, end, font, font_color, font_size, track_name, dra
 
 
 def group_sentences(corrected_srt, threshold=1.0):
-    """按时间间隔分句"""
+    """Group sentences by time interval threshold."""
     if not corrected_srt:
         return []
     sentences = []
@@ -173,7 +173,7 @@ def group_sentences(corrected_srt, threshold=1.0):
 
 
 def adjust_sentence_timing(sentences, gap_adjust=1, time_precision=3):
-    """调整句子间的时间间隔，并保留原始时间"""
+    """Adjust timing between sentences and preserve original times."""
     def round_time(t):
         return round(t, time_precision) if time_precision is not None else t
 
@@ -181,7 +181,7 @@ def adjust_sentence_timing(sentences, gap_adjust=1, time_precision=3):
     total_offset = 0.0
     prev_end = sentences[0][-1]["end"]
 
-    # 第一句保持原时间
+    # First sentence keeps original timing
     first_sentence = [
         {
             "word": w["word"],
@@ -217,7 +217,7 @@ def adjust_sentence_timing(sentences, gap_adjust=1, time_precision=3):
 
 
 def split_into_paragraphs(sentence, max_words=5, max_chunk_duration=1.5):
-    """把句子按词数和时长分段"""
+    """Split sentence into paragraphs by word count and duration."""
     paragraphs = []
     i = 0
     n = len(sentence)
@@ -260,15 +260,15 @@ def build_segments_by_mode(
     background_color,
     ):
 
-    """根据模式生成字幕片段"""
+    """Build subtitle segments based on animation mode."""
     segments = []
-    #print("二级代码返回调试fx", fixed_width)
+    #print("DEBUG: fixed_width", fixed_width)
 
     if mode == "word_pop":
-        # 单词跳出
+        # Word pop animation
         for w in paragraph:
             text_styles = []
-            word_count = len(w["word"].replace(" ", "")) #统计有多少个字
+            word_count = len(w["word"].replace(" ", "")) # Count characters
             text_styles.append({
                         "start": 0,
                         "end": word_count,
@@ -301,7 +301,7 @@ def build_segments_by_mode(
             })
 
     elif mode == "word_highlight":
-        # 单词高亮：当前词亮，其他灰
+        # Word highlight: current word bright, others gray
         paragraph_text = " ".join(w["word"] for w in paragraph)
         offsets = []
         ci = 0
@@ -351,7 +351,7 @@ def build_segments_by_mode(
             })
 
     elif mode == "sentence_fade":
-        # 句子渐显：已亮过的词继续保持亮
+        # Sentence fade: previously highlighted words stay bright
         paragraph_text = " ".join(w["word"] for w in paragraph)
         offsets = []
         ci = 0
@@ -396,12 +396,12 @@ def build_segments_by_mode(
             })
 
     elif mode == "sentence_pop":
-        # 句子跳出
+        # Sentence pop animation
         text = " ".join(w["word"] for w in paragraph)
         start_time = paragraph[0]["start"]
         end_time = paragraph[-1]["end"]
         text_styles = []
-        word_count = len(text.replace(" ", "")) #统计有多少个字
+        word_count = len(text.replace(" ", "")) # Count characters
         text_styles.append({
                     "start": 0,
                     "end": word_count,
@@ -435,7 +435,7 @@ def build_segments_by_mode(
         })
 
     else:
-        raise ValueError(f"未知模式: {mode}")
+        raise ValueError(f"Unknown mode: {mode}")
     """segments.append({
         "file_name": file_name,
     })"""
@@ -538,7 +538,7 @@ def add_koubo_from_srt(
     background_color="#000000",
 
     ):
-    """统一入口：根据 mode 选择字幕效果"""
+    """Unified entry point: choose subtitle effect based on mode."""
     sentences = group_sentences(corrected_srt)
     adjusted_sentences = adjust_sentence_timing(sentences, gap_adjust, time_precision)
     all_paragraphs = [split_into_paragraphs(s, max_words, max_chunk_duration) for s in adjusted_sentences]
@@ -568,7 +568,7 @@ def add_koubo_from_srt(
             #print("segments", segments)
 
             for seg in segments:
-                #print("二级代码返回调试fx", seg)
+                #print("DEBUG: segment", seg)
                 if draft_id_ret:
                     seg["draft_id"] = draft_id_ret
                     print("seg", seg)
@@ -586,7 +586,7 @@ colors = {
         "border_color": "#FFD700",
         "background_color": "#000000",
         "normal_color": "#FFFFFF",
-        "highlight_color": "#DA70D6"  # 紫色
+        "highlight_color": "#DA70D6"  # Purple
     }
 
 draft_id = add_koubo_from_srt(
@@ -595,7 +595,7 @@ draft_id = add_koubo_from_srt(
     font_size=15,
     gap_adjust=0,
     transform_x=0,
-    transform_y=-0.45,# 0=保持原间隔，1=调整>1s的间隔
+    transform_y=-0.45, # 0=keep original spacing, 1=adjust gaps >1s
     fixed_width = 0.6,
     mode="word_highlight",
     shadow_enabled=True,
@@ -604,7 +604,7 @@ draft_id = add_koubo_from_srt(
 
     **colors,
 
-    font="ZY_Modern", #设置自己的字体，需要在字体库中添加
+    font="ZY_Modern", # Custom font name; must be added to font library
 
 
 )
@@ -615,12 +615,13 @@ save_result = save_draft_impl(draft_id, draft_folder)
 
 print(save_result)
 """
-# 单词高亮
+Animation modes:
+# Word highlight
 mode="word_highlight"
-# 单词跳出
+# Word pop
 mode="word_pop"
-# 句子渐显
+# Sentence fade
 mode="sentence_fade"
-# 句子跳出
+# Sentence pop
 mode="sentence_pop"
 """

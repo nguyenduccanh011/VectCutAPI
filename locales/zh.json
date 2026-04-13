@@ -1,0 +1,20 @@
+{
+  "capcut_modules_unavailable": "CapCut 模块不可用。",
+  "unknown_tool": "未知工具: {tool_name}",
+  "text_styles_conversion_error": "转换 text_styles 时出错: {error}",
+  "tool_execution_error": "工具执行错误: {error}",
+  "request_handling_error": "请求处理错误: {error}",
+  "method_not_found": "未找到方法",
+  "starting_server": "正在启动 CapCut API MCP Server（完整版本）...",
+  "available_tools": "可用工具: 已加载 {count} 个",
+  "feature_summary": "功能: 视频、音频、图片、文本、字幕、特效、贴纸、关键帧",
+  "waiting_connections": "等待客户端连接...",
+  "eof_received": "收到 EOF，正在关闭",
+  "eof_exception": "出现 EOF 异常，正在关闭",
+  "server_error": "服务器错误: {error}",
+  "server_stopped_by_user": "用户已停止服务器",
+  "fatal_server_error": "服务器致命错误: {error}",
+  "invalid_text_range": "无效文本范围: [{start}, {end})，文本长度: {length}",
+  "create_draft_failed": "创建草稿失败: {error}",
+  "save_draft_failed": "保存草稿失败: {error}"
+}

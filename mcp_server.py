@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 """
 CapCut API MCP Server (Complete Version)
-
-完整版本的MCP服务器，集成所有CapCut API接口
 """
 
 import sys
@@ -12,11 +10,12 @@ import traceback
 import io
 import contextlib
 from typing import Any, Dict, List, Optional
+from i18n import t
 
-# 添加项目根目录到Python路径
+# Add project root to Python path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-# 导入CapCut API功能
+# Import CapCut API features
 try:
     from create_draft import get_or_create_draft
     from add_text_impl import add_text_impl
@@ -35,223 +34,223 @@ except ImportError as e:
     print(f"Warning: Could not import CapCut modules: {e}", file=sys.stderr)
     CAPCUT_AVAILABLE = False
 
-# 完整的工具定义
+# Tool definitions
 TOOLS = [
     {
         "name": "create_draft",
-        "description": "创建新的CapCut草稿",
+        "description": "Create a new CapCut draft",
         "inputSchema": {
             "type": "object",
             "properties": {
-                "width": {"type": "integer", "default": 1080, "description": "视频宽度"},
-                "height": {"type": "integer", "default": 1920, "description": "视频高度"}
+                "width": {"type": "integer", "default": 1080, "description": "Video width"},
+                "height": {"type": "integer", "default": 1920, "description": "Video height"}
             }
         }
     },
     {
         "name": "add_video",
-        "description": "添加视频到草稿，支持转场、蒙版、背景模糊等效果",
+        "description": "Add a video to draft with transition/mask/background blur support",
         "inputSchema": {
             "type": "object",
             "properties": {
-                "video_url": {"type": "string", "description": "视频URL"},
-                "draft_id": {"type": "string", "description": "草稿ID"},
-                "start": {"type": "number", "default": 0, "description": "开始时间（秒）"},
-                "end": {"type": "number", "description": "结束时间（秒）"},
-                "target_start": {"type": "number", "default": 0, "description": "目标开始时间（秒）"},
-                "width": {"type": "integer", "default": 1080, "description": "视频宽度"},
-                "height": {"type": "integer", "default": 1920, "description": "视频高度"},
-                "transform_x": {"type": "number", "default": 0, "description": "X轴位置"},
-                "transform_y": {"type": "number", "default": 0, "description": "Y轴位置"},
-                "scale_x": {"type": "number", "default": 1, "description": "X轴缩放"},
-                "scale_y": {"type": "number", "default": 1, "description": "Y轴缩放"},
-                "speed": {"type": "number", "default": 1.0, "description": "播放速度"},
-                "track_name": {"type": "string", "default": "main", "description": "轨道名称"},
-                "volume": {"type": "number", "default": 1.0, "description": "音量"},
-                "transition": {"type": "string", "description": "转场类型"},
-                "transition_duration": {"type": "number", "default": 0.5, "description": "转场时长"},
-                "mask_type": {"type": "string", "description": "蒙版类型"},
-                "background_blur": {"type": "integer", "description": "背景模糊级别(1-4)"}
+                "video_url": {"type": "string", "description": "Video URL"},
+                "draft_id": {"type": "string", "description": "Draft ID"},
+                "start": {"type": "number", "default": 0, "description": "Start time (seconds)"},
+                "end": {"type": "number", "description": "End time (seconds)"},
+                "target_start": {"type": "number", "default": 0, "description": "Target start time (seconds)"},
+                "width": {"type": "integer", "default": 1080, "description": "Video width"},
+                "height": {"type": "integer", "default": 1920, "description": "Video height"},
+                "transform_x": {"type": "number", "default": 0, "description": "X position"},
+                "transform_y": {"type": "number", "default": 0, "description": "Y position"},
+                "scale_x": {"type": "number", "default": 1, "description": "X scale"},
+                "scale_y": {"type": "number", "default": 1, "description": "Y scale"},
+                "speed": {"type": "number", "default": 1.0, "description": "Playback speed"},
+                "track_name": {"type": "string", "default": "main", "description": "Track name"},
+                "volume": {"type": "number", "default": 1.0, "description": "Volume"},
+                "transition": {"type": "string", "description": "Transition type"},
+                "transition_duration": {"type": "number", "default": 0.5, "description": "Transition duration"},
+                "mask_type": {"type": "string", "description": "Mask type"},
+                "background_blur": {"type": "integer", "description": "Background blur level (1-4)"}
             },
             "required": ["video_url"]
         }
     },
     {
         "name": "add_audio",
-        "description": "添加音频到草稿，支持音效处理",
+        "description": "Add audio to draft with audio effect support",
         "inputSchema": {
             "type": "object",
             "properties": {
-                "audio_url": {"type": "string", "description": "音频URL"},
-                "draft_id": {"type": "string", "description": "草稿ID"},
-                "start": {"type": "number", "default": 0, "description": "开始时间（秒）"},
-                "end": {"type": "number", "description": "结束时间（秒）"},
-                "target_start": {"type": "number", "default": 0, "description": "目标开始时间（秒）"},
-                "volume": {"type": "number", "default": 1.0, "description": "音量"},
-                "speed": {"type": "number", "default": 1.0, "description": "播放速度"},
-                "track_name": {"type": "string", "default": "audio_main", "description": "轨道名称"},
-                "width": {"type": "integer", "default": 1080, "description": "视频宽度"},
-                "height": {"type": "integer", "default": 1920, "description": "视频高度"}
+                "audio_url": {"type": "string", "description": "Audio URL"},
+                "draft_id": {"type": "string", "description": "Draft ID"},
+                "start": {"type": "number", "default": 0, "description": "Start time (seconds)"},
+                "end": {"type": "number", "description": "End time (seconds)"},
+                "target_start": {"type": "number", "default": 0, "description": "Target start time (seconds)"},
+                "volume": {"type": "number", "default": 1.0, "description": "Volume"},
+                "speed": {"type": "number", "default": 1.0, "description": "Playback speed"},
+                "track_name": {"type": "string", "default": "audio_main", "description": "Track name"},
+                "width": {"type": "integer", "default": 1080, "description": "Video width"},
+                "height": {"type": "integer", "default": 1920, "description": "Video height"}
             },
             "required": ["audio_url"]
         }
     },
     {
         "name": "add_image",
-        "description": "添加图片到草稿，支持动画、转场、蒙版等效果",
+        "description": "Add image to draft with animation/transition/mask support",
         "inputSchema": {
             "type": "object",
             "properties": {
-                "image_url": {"type": "string", "description": "图片URL"},
-                "draft_id": {"type": "string", "description": "草稿ID"},
-                "start": {"type": "number", "default": 0, "description": "开始时间（秒）"},
-                "end": {"type": "number", "default": 3.0, "description": "结束时间（秒）"},
-                "width": {"type": "integer", "default": 1080, "description": "视频宽度"},
-                "height": {"type": "integer", "default": 1920, "description": "视频高度"},
-                "transform_x": {"type": "number", "default": 0, "description": "X轴位置"},
-                "transform_y": {"type": "number", "default": 0, "description": "Y轴位置"},
-                "scale_x": {"type": "number", "default": 1, "description": "X轴缩放"},
-                "scale_y": {"type": "number", "default": 1, "description": "Y轴缩放"},
-                "track_name": {"type": "string", "default": "main", "description": "轨道名称"},
-                "intro_animation": {"type": "string", "description": "入场动画"},
-                "outro_animation": {"type": "string", "description": "出场动画"},
-                "transition": {"type": "string", "description": "转场类型"},
-                "mask_type": {"type": "string", "description": "蒙版类型"}
+                "image_url": {"type": "string", "description": "Image URL"},
+                "draft_id": {"type": "string", "description": "Draft ID"},
+                "start": {"type": "number", "default": 0, "description": "Start time (seconds)"},
+                "end": {"type": "number", "default": 3.0, "description": "End time (seconds)"},
+                "width": {"type": "integer", "default": 1080, "description": "Video width"},
+                "height": {"type": "integer", "default": 1920, "description": "Video height"},
+                "transform_x": {"type": "number", "default": 0, "description": "X position"},
+                "transform_y": {"type": "number", "default": 0, "description": "Y position"},
+                "scale_x": {"type": "number", "default": 1, "description": "X scale"},
+                "scale_y": {"type": "number", "default": 1, "description": "Y scale"},
+                "track_name": {"type": "string", "default": "main", "description": "Track name"},
+                "intro_animation": {"type": "string", "description": "Intro animation"},
+                "outro_animation": {"type": "string", "description": "Outro animation"},
+                "transition": {"type": "string", "description": "Transition type"},
+                "mask_type": {"type": "string", "description": "Mask type"}
             },
             "required": ["image_url"]
         }
     },
     {
         "name": "add_text",
-        "description": "添加文本到草稿，支持文本多样式、文字阴影和文字背景",
+        "description": "Add text to draft with multi-style text, shadow, and background",
         "inputSchema": {
             "type": "object",
             "properties": {
-                "text": {"type": "string", "description": "文本内容"},
-                "start": {"type": "number", "description": "开始时间（秒）"},
-                "end": {"type": "number", "description": "结束时间（秒）"},
-                "draft_id": {"type": "string", "description": "草稿ID"},
-                "font_color": {"type": "string", "default": "#ffffff", "description": "字体颜色"},
-                "font_size": {"type": "integer", "default": 24, "description": "字体大小"},
-                "shadow_enabled": {"type": "boolean", "default": False, "description": "是否启用文字阴影"},
-                "shadow_color": {"type": "string", "default": "#000000", "description": "阴影颜色"},
-                "shadow_alpha": {"type": "number", "default": 0.8, "description": "阴影透明度"},
-                "shadow_angle": {"type": "number", "default": 315.0, "description": "阴影角度"},
-                "shadow_distance": {"type": "number", "default": 5.0, "description": "阴影距离"},
-                "shadow_smoothing": {"type": "number", "default": 0.0, "description": "阴影平滑度"},
-                "background_color": {"type": "string", "description": "背景颜色"},
-                "background_alpha": {"type": "number", "default": 1.0, "description": "背景透明度"},
-                "background_style": {"type": "integer", "default": 0, "description": "背景样式"},
-                "background_round_radius": {"type": "number", "default": 0.0, "description": "背景圆角半径"},
-                "text_styles": {"type": "array", "description": "文本多样式配置列表"}
+                "text": {"type": "string", "description": "Text content"},
+                "start": {"type": "number", "description": "Start time (seconds)"},
+                "end": {"type": "number", "description": "End time (seconds)"},
+                "draft_id": {"type": "string", "description": "Draft ID"},
+                "font_color": {"type": "string", "default": "#ffffff", "description": "Font color"},
+                "font_size": {"type": "integer", "default": 24, "description": "Font size"},
+                "shadow_enabled": {"type": "boolean", "default": False, "description": "Enable text shadow"},
+                "shadow_color": {"type": "string", "default": "#000000", "description": "Shadow color"},
+                "shadow_alpha": {"type": "number", "default": 0.8, "description": "Shadow alpha"},
+                "shadow_angle": {"type": "number", "default": 315.0, "description": "Shadow angle"},
+                "shadow_distance": {"type": "number", "default": 5.0, "description": "Shadow distance"},
+                "shadow_smoothing": {"type": "number", "default": 0.0, "description": "Shadow smoothing"},
+                "background_color": {"type": "string", "description": "Background color"},
+                "background_alpha": {"type": "number", "default": 1.0, "description": "Background alpha"},
+                "background_style": {"type": "integer", "default": 0, "description": "Background style"},
+                "background_round_radius": {"type": "number", "default": 0.0, "description": "Background corner radius"},
+                "text_styles": {"type": "array", "description": "Text style ranges"}
             },
             "required": ["text", "start", "end"]
         }
     },
     {
         "name": "add_subtitle",
-        "description": "添加字幕到草稿，支持SRT文件和样式设置",
+        "description": "Add subtitles to draft with SRT and style options",
         "inputSchema": {
             "type": "object",
             "properties": {
-                "srt_path": {"type": "string", "description": "SRT字幕文件路径或URL"},
-                "draft_id": {"type": "string", "description": "草稿ID"},
-                "track_name": {"type": "string", "default": "subtitle", "description": "轨道名称"},
-                "time_offset": {"type": "number", "default": 0, "description": "时间偏移（秒）"},
-                "font": {"type": "string", "description": "字体"},
-                "font_size": {"type": "number", "default": 8.0, "description": "字体大小"},
-                "font_color": {"type": "string", "default": "#FFFFFF", "description": "字体颜色"},
-                "bold": {"type": "boolean", "default": False, "description": "是否粗体"},
-                "italic": {"type": "boolean", "default": False, "description": "是否斜体"},
-                "underline": {"type": "boolean", "default": False, "description": "是否下划线"},
-                "border_width": {"type": "number", "default": 0.0, "description": "边框宽度"},
-                "border_color": {"type": "string", "default": "#000000", "description": "边框颜色"},
-                "background_color": {"type": "string", "default": "#000000", "description": "背景颜色"},
-                "background_alpha": {"type": "number", "default": 0.0, "description": "背景透明度"},
-                "transform_x": {"type": "number", "default": 0.0, "description": "X轴位置"},
-                "transform_y": {"type": "number", "default": -0.8, "description": "Y轴位置"},
-                "width": {"type": "integer", "default": 1080, "description": "视频宽度"},
-                "height": {"type": "integer", "default": 1920, "description": "视频高度"}
+                "srt_path": {"type": "string", "description": "SRT file path or URL"},
+                "draft_id": {"type": "string", "description": "Draft ID"},
+                "track_name": {"type": "string", "default": "subtitle", "description": "Track name"},
+                "time_offset": {"type": "number", "default": 0, "description": "Time offset (seconds)"},
+                "font": {"type": "string", "description": "Font"},
+                "font_size": {"type": "number", "default": 8.0, "description": "Font size"},
+                "font_color": {"type": "string", "default": "#FFFFFF", "description": "Font color"},
+                "bold": {"type": "boolean", "default": False, "description": "Bold"},
+                "italic": {"type": "boolean", "default": False, "description": "Italic"},
+                "underline": {"type": "boolean", "default": False, "description": "Underline"},
+                "border_width": {"type": "number", "default": 0.0, "description": "Border width"},
+                "border_color": {"type": "string", "default": "#000000", "description": "Border color"},
+                "background_color": {"type": "string", "default": "#000000", "description": "Background color"},
+                "background_alpha": {"type": "number", "default": 0.0, "description": "Background alpha"},
+                "transform_x": {"type": "number", "default": 0.0, "description": "X position"},
+                "transform_y": {"type": "number", "default": -0.8, "description": "Y position"},
+                "width": {"type": "integer", "default": 1080, "description": "Video width"},
+                "height": {"type": "integer", "default": 1920, "description": "Video height"}
             },
             "required": ["srt_path"]
         }
     },
     {
         "name": "add_effect",
-        "description": "添加特效到草稿",
+        "description": "Add an effect to draft",
         "inputSchema": {
             "type": "object",
             "properties": {
-                "effect_type": {"type": "string", "description": "特效类型名称"},
-                "draft_id": {"type": "string", "description": "草稿ID"},
-                "start": {"type": "number", "default": 0, "description": "开始时间（秒）"},
-                "end": {"type": "number", "default": 3.0, "description": "结束时间（秒）"},
-                "track_name": {"type": "string", "default": "effect_01", "description": "轨道名称"},
-                "params": {"type": "array", "description": "特效参数列表"},
-                "width": {"type": "integer", "default": 1080, "description": "视频宽度"},
-                "height": {"type": "integer", "default": 1920, "description": "视频高度"}
+                "effect_type": {"type": "string", "description": "Effect type name"},
+                "draft_id": {"type": "string", "description": "Draft ID"},
+                "start": {"type": "number", "default": 0, "description": "Start time (seconds)"},
+                "end": {"type": "number", "default": 3.0, "description": "End time (seconds)"},
+                "track_name": {"type": "string", "default": "effect_01", "description": "Track name"},
+                "params": {"type": "array", "description": "Effect parameter list"},
+                "width": {"type": "integer", "default": 1080, "description": "Video width"},
+                "height": {"type": "integer", "default": 1920, "description": "Video height"}
             },
             "required": ["effect_type"]
         }
     },
     {
         "name": "add_sticker",
-        "description": "添加贴纸到草稿",
+        "description": "Add a sticker to draft",
         "inputSchema": {
             "type": "object",
             "properties": {
-                "resource_id": {"type": "string", "description": "贴纸资源ID"},
-                "draft_id": {"type": "string", "description": "草稿ID"},
-                "start": {"type": "number", "description": "开始时间（秒）"},
-                "end": {"type": "number", "description": "结束时间（秒）"},
-                "transform_x": {"type": "number", "default": 0, "description": "X轴位置"},
-                "transform_y": {"type": "number", "default": 0, "description": "Y轴位置"},
-                "scale_x": {"type": "number", "default": 1.0, "description": "X轴缩放"},
-                "scale_y": {"type": "number", "default": 1.0, "description": "Y轴缩放"},
-                "alpha": {"type": "number", "default": 1.0, "description": "透明度"},
-                "rotation": {"type": "number", "default": 0.0, "description": "旋转角度"},
-                "track_name": {"type": "string", "default": "sticker_main", "description": "轨道名称"},
-                "width": {"type": "integer", "default": 1080, "description": "视频宽度"},
-                "height": {"type": "integer", "default": 1920, "description": "视频高度"}
+                "resource_id": {"type": "string", "description": "Sticker resource ID"},
+                "draft_id": {"type": "string", "description": "Draft ID"},
+                "start": {"type": "number", "description": "Start time (seconds)"},
+                "end": {"type": "number", "description": "End time (seconds)"},
+                "transform_x": {"type": "number", "default": 0, "description": "X position"},
+                "transform_y": {"type": "number", "default": 0, "description": "Y position"},
+                "scale_x": {"type": "number", "default": 1.0, "description": "X scale"},
+                "scale_y": {"type": "number", "default": 1.0, "description": "Y scale"},
+                "alpha": {"type": "number", "default": 1.0, "description": "Opacity"},
+                "rotation": {"type": "number", "default": 0.0, "description": "Rotation"},
+                "track_name": {"type": "string", "default": "sticker_main", "description": "Track name"},
+                "width": {"type": "integer", "default": 1080, "description": "Video width"},
+                "height": {"type": "integer", "default": 1920, "description": "Video height"}
             },
             "required": ["resource_id", "start", "end"]
         }
     },
     {
         "name": "add_video_keyframe",
-        "description": "添加视频关键帧，支持位置、缩放、旋转、透明度等属性动画",
+        "description": "Add video keyframes for position/scale/rotation/alpha animations",
         "inputSchema": {
             "type": "object",
             "properties": {
-                "draft_id": {"type": "string", "description": "草稿ID"},
-                "track_name": {"type": "string", "default": "main", "description": "轨道名称"},
-                "property_type": {"type": "string", "description": "关键帧属性类型(position_x, position_y, rotation, scale_x, scale_y, uniform_scale, alpha, saturation, contrast, brightness, volume)"},
-                "time": {"type": "number", "default": 0.0, "description": "关键帧时间点（秒）"},
-                "value": {"type": "string", "description": "关键帧值"},
-                "property_types": {"type": "array", "description": "批量模式：关键帧属性类型列表"},
-                "times": {"type": "array", "description": "批量模式：关键帧时间点列表"},
-                "values": {"type": "array", "description": "批量模式：关键帧值列表"}
+                "draft_id": {"type": "string", "description": "Draft ID"},
+                "track_name": {"type": "string", "default": "main", "description": "Track name"},
+                "property_type": {"type": "string", "description": "Keyframe property type(position_x, position_y, rotation, scale_x, scale_y, uniform_scale, alpha, saturation, contrast, brightness, volume)"},
+                "time": {"type": "number", "default": 0.0, "description": "Keyframe time (seconds)"},
+                "value": {"type": "string", "description": "Keyframe value"},
+                "property_types": {"type": "array", "description": "Batch mode: keyframe property type list"},
+                "times": {"type": "array", "description": "Batch mode: keyframe times"},
+                "values": {"type": "array", "description": "Batch mode: keyframe value list"}
             }
         }
     },
     {
         "name": "get_video_duration",
-        "description": "获取视频时长",
+        "description": "Get video duration",
         "inputSchema": {
             "type": "object",
             "properties": {
-                "video_url": {"type": "string", "description": "视频URL"}
+                "video_url": {"type": "string", "description": "Video URL"}
             },
             "required": ["video_url"]
         }
     },
     {
         "name": "save_draft",
-        "description": "保存草稿",
+        "description": "Save draft",
         "inputSchema": {
             "type": "object",
             "properties": {
-                "draft_id": {"type": "string", "description": "草稿ID"}
+                "draft_id": {"type": "string", "description": "Draft ID"}
             }
         }
     }
@@ -259,7 +258,7 @@ TOOLS = [
 
 @contextlib.contextmanager
 def capture_stdout():
-    """捕获标准输出，防止CapCut API的调试信息干扰JSON响应"""
+    """Capture stdout to prevent debug logs from breaking JSON responses."""
     old_stdout = sys.stdout
     sys.stdout = io.StringIO()
     try:
@@ -268,7 +267,7 @@ def capture_stdout():
         sys.stdout = old_stdout
 
 def convert_text_styles(text_styles_data):
-    """将字典格式的text_styles转换为TextStyleRange对象列表"""
+    """Convert dict-style text_styles to a list of TextStyleRange objects."""
     if not text_styles_data:
         return None
     
@@ -287,18 +286,18 @@ def convert_text_styles(text_styles_data):
             text_style_ranges.append(style_range)
         return text_style_ranges
     except Exception as e:
-        print(f"[ERROR] Error converting text_styles: {e}", file=sys.stderr)
+        print(f"[ERROR] {t('text_styles_conversion_error', error=str(e))}", file=sys.stderr)
         return None
 
 def execute_tool(tool_name: str, arguments: Dict[str, Any]) -> Dict[str, Any]:
-    """执行具体的工具"""
+    """Execute one tool call."""
     try:
         print(f"[DEBUG] Executing tool: {tool_name} with args: {arguments}", file=sys.stderr)
         
         if not CAPCUT_AVAILABLE:
-            return {"success": False, "error": "CapCut modules not available"}
+            return {"success": False, "error": t("capcut_modules_unavailable")}
         
-        # 捕获标准输出，防止调试信息干扰
+        # Capture stdout to avoid mixing debug output with JSON response.
         with capture_stdout() as captured:
             if tool_name == "create_draft":
                 draft_id, script = get_or_create_draft(
@@ -320,7 +319,7 @@ def execute_tool(tool_name: str, arguments: Dict[str, Any]) -> Dict[str, Any]:
                 result = add_image_impl(**arguments)
                 
             elif tool_name == "add_text":
-                # 处理text_styles参数
+                # Convert text_styles payload if provided.
                 text_styles_converted = None
                 if "text_styles" in arguments and arguments["text_styles"]:
                     text_styles_converted = convert_text_styles(arguments["text_styles"])
@@ -352,7 +351,7 @@ def execute_tool(tool_name: str, arguments: Dict[str, Any]) -> Dict[str, Any]:
                     result = {"draft_url": f"https://www.install-ai-guider.top/draft/downloader?draft_id=unknown"}
                 
             else:
-                return {"success": False, "error": f"Unknown tool: {tool_name}"}
+                return {"success": False, "error": t("unknown_tool", tool_name=tool_name)}
         
         return {
             "success": True,
@@ -365,12 +364,12 @@ def execute_tool(tool_name: str, arguments: Dict[str, Any]) -> Dict[str, Any]:
         }
         
     except Exception as e:
-        print(f"[ERROR] Tool execution error: {e}", file=sys.stderr)
+        print(f"[ERROR] {t('tool_execution_error', error=str(e))}", file=sys.stderr)
         print(f"[ERROR] Traceback: {traceback.format_exc()}", file=sys.stderr)
         return {"success": False, "error": str(e)}
 
 def handle_request(request_data: str) -> Optional[str]:
-    """处理JSON-RPC请求"""
+    """Handle one JSON-RPC request."""
     try:
         request = json.loads(request_data.strip())
         print(f"[DEBUG] Received request: {request.get('method', 'unknown')}", file=sys.stderr)
@@ -428,12 +427,12 @@ def handle_request(request_data: str) -> Optional[str]:
             error_response = {
                 "jsonrpc": "2.0",
                 "id": request.get("id"),
-                "error": {"code": -32601, "message": "Method not found"}
+                "error": {"code": -32601, "message": t("method_not_found")}
             }
             return json.dumps(error_response)
             
     except Exception as e:
-        print(f"[ERROR] Request handling error: {e}", file=sys.stderr)
+        print(f"[ERROR] {t('request_handling_error', error=str(e))}", file=sys.stderr)
         print(f"[ERROR] Traceback: {traceback.format_exc()}", file=sys.stderr)
         error_response = {
             "jsonrpc": "2.0",
@@ -443,18 +442,18 @@ def handle_request(request_data: str) -> Optional[str]:
         return json.dumps(error_response)
 
 def main():
-    """主函数"""
-    print("🚀 Starting CapCut API MCP Server (Complete Version)...", file=sys.stderr)
-    print(f"📋 Available tools: {len(TOOLS)} tools loaded", file=sys.stderr)
-    print("✨ Features: 视频、音频、图片、文本、字幕、特效、贴纸、关键帧", file=sys.stderr)
-    print("🔌 Waiting for client connections...", file=sys.stderr)
+    """Main entry point."""
+    print(f"🚀 {t('starting_server')}", file=sys.stderr)
+    print(f"📋 {t('available_tools', count=len(TOOLS))}", file=sys.stderr)
+    print(f"✨ {t('feature_summary')}", file=sys.stderr)
+    print(f"🔌 {t('waiting_connections')}", file=sys.stderr)
     
     try:
         while True:
             try:
                 line = sys.stdin.readline()
                 if not line:
-                    print("[DEBUG] EOF received, shutting down", file=sys.stderr)
+                    print(f"[DEBUG] {t('eof_received')}", file=sys.stderr)
                     break
                 
                 response = handle_request(line)
@@ -463,16 +462,16 @@ def main():
                     sys.stdout.flush()
                     
             except EOFError:
-                print("[DEBUG] EOF exception, shutting down", file=sys.stderr)
+                print(f"[DEBUG] {t('eof_exception')}", file=sys.stderr)
                 break
             except Exception as e:
-                print(f"[ERROR] Server error: {e}", file=sys.stderr)
+                print(f"[ERROR] {t('server_error', error=str(e))}", file=sys.stderr)
                 print(f"[ERROR] Traceback: {traceback.format_exc()}", file=sys.stderr)
                 
     except KeyboardInterrupt:
-        print("[INFO] Server stopped by user", file=sys.stderr)
+        print(f"[INFO] {t('server_stopped_by_user')}", file=sys.stderr)
     except Exception as e:
-        print(f"[ERROR] Fatal server error: {e}", file=sys.stderr)
+        print(f"[ERROR] {t('fatal_server_error', error=str(e))}", file=sys.stderr)
         print(f"[ERROR] Traceback: {traceback.format_exc()}", file=sys.stderr)
 
 if __name__ == "__main__":

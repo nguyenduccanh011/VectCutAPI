@@ -111,12 +111,12 @@ def download_audio(audio_url, draft_name, material_name):
         raise Exception(f"Failed to download audio:\n{e.stderr}")
 
 def download_file(url:str, local_filename, max_retries=3, timeout=180):
-    # 检查是否是本地文件路径
+    # Check whether the source is a local file path.
     if os.path.exists(url) and os.path.isfile(url):
-        # 是本地文件，直接复制
+        # Local file: copy directly.
         directory = os.path.dirname(local_filename)
         
-        # 创建目标目录（如果不存在）
+        # Create target directory when needed.
         if directory and not os.path.exists(directory):
             os.makedirs(directory, exist_ok=True)
             print(f"Created directory: {directory}")
@@ -124,14 +124,14 @@ def download_file(url:str, local_filename, max_retries=3, timeout=180):
         print(f"Copying local file: {url} to {local_filename}")
         start_time = time.time()
         
-        # 复制文件
+        # Copy file
         shutil.copy2(url, local_filename)
         
         print(f"Copy completed in {time.time()-start_time:.2f} seconds")
         print(f"File saved as: {os.path.abspath(local_filename)}")
         return True
     
-    # 原有的下载逻辑
+    # Remote download logic.
     # Extract directory part
     directory = os.path.dirname(local_filename)
 
@@ -154,7 +154,7 @@ def download_file(url:str, local_filename, max_retries=3, timeout=180):
             # Add headers
             headers = {
                 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36',
-                'Referer': 'https://www.163.com/',  # 网易的Referer
+                'Referer': 'https://www.163.com/',  # Required by some CDN endpoints
                 'Accept': 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8',
                 'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8'
             }

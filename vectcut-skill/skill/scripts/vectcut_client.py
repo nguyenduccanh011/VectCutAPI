@@ -23,15 +23,15 @@ from enum import Enum
 
 
 class Resolution(Enum):
-    """常用视频分辨率预设"""
-    VERTICAL = (1080, 1920)      # 竖屏 - TikTok/抖音
-    HORIZONTAL = (1920, 1080)    # 横屏 - YouTube
-    SQUARE = (1080, 1080)        # 方形 - Instagram
-    WIDE = (1920, 1200)         # 宽屏
+    """Common video resolution presets."""
+    VERTICAL = (1080, 1920)      # Vertical - TikTok
+    HORIZONTAL = (1920, 1080)    # Horizontal - YouTube
+    SQUARE = (1080, 1080)        # Square - Instagram
+    WIDE = (1920, 1200)          # Wide
 
 
 class Transition(Enum):
-    """转场效果类型"""
+    """Transition effect types."""
     FADE_IN = "fade_in"
     FADE_OUT = "fade_out"
     WIPE_LEFT = "wipe_left"
@@ -41,7 +41,7 @@ class Transition(Enum):
 
 
 class TextAnimation(Enum):
-    """文字动画类型"""
+    """Text animation types."""
     FADE_IN = "fade_in"
     FADE_OUT = "fade_out"
     ZOOM_IN = "zoom_in"
@@ -56,7 +56,7 @@ class TextAnimation(Enum):
 
 @dataclass
 class DraftInfo:
-    """草稿信息"""
+    """Draft information."""
     draft_id: str
     draft_folder: Optional[str] = None
     draft_url: Optional[str] = None
@@ -67,7 +67,7 @@ class DraftInfo:
 
 @dataclass
 class ApiResult:
-    """API 响应结果"""
+    """API response result."""
     success: bool
     output: Dict[str, Any]
     error: Optional[str] = None
@@ -87,18 +87,18 @@ class ApiResult:
 
 class VectCutClient:
     """
-    VectCutAPI Python 客户端
+    VectCutAPI Python client.
 
-    提供简洁的接口来操作 VectCutAPI 视频编辑服务。
+    Provides a simple interface for the VectCutAPI video editing service.
     """
 
     def __init__(self, base_url: str = "http://localhost:9001", timeout: int = 120):
         """
-        初始化客户端
+        Initialize client.
 
         Args:
-            base_url: API 服务器地址
-            timeout: 请求超时时间(秒)
+            base_url: API server URL.
+            timeout: Request timeout in seconds.
         """
         self.base_url = base_url.rstrip("/")
         self.timeout = timeout
@@ -106,14 +106,14 @@ class VectCutClient:
 
     def _post(self, endpoint: str, **kwargs) -> ApiResult:
         """
-        发送 POST 请求
+        Send a POST request.
 
         Args:
-            endpoint: API 端点
-            **kwargs: 请求参数
+            endpoint: API endpoint.
+            **kwargs: Request payload.
 
         Returns:
-            ApiResult: API 响应结果
+            ApiResult: API result.
         """
         url = f"{self.base_url}{endpoint}"
         try:
@@ -130,13 +130,13 @@ class VectCutClient:
 
     def _get(self, endpoint: str) -> Any:
         """
-        发送 GET 请求
+        Send a GET request.
 
         Args:
-            endpoint: API 端点
+            endpoint: API endpoint.
 
         Returns:
-            响应数据
+            Response data.
         """
         url = f"{self.base_url}{endpoint}"
         try:
@@ -146,22 +146,22 @@ class VectCutClient:
         except requests.RequestException as e:
             return {"error": str(e)}
 
-    # ==================== 核心操作 ====================
+    # ==================== Core operations ====================
 
     def create_draft(self,
                     width: int = 1080,
                     height: int = 1920,
                     draft_folder: Optional[str] = None) -> DraftInfo:
         """
-        创建新草稿
+        Create a new draft.
 
         Args:
-            width: 视频宽度
-            height: 视频高度
-            draft_folder: 草稿文件夹路径
+            width: Video width.
+            height: Video height.
+            draft_folder: Draft folder path.
 
         Returns:
-            DraftInfo: 草稿信息
+            DraftInfo: Draft information.
         """
         result = self._post("/create_draft",
                            width=width,
@@ -172,20 +172,20 @@ class VectCutClient:
                 draft_id=result.draft_id,
                 draft_folder=result.draft_folder
             )
-        raise Exception(f"创建草稿失败: {result.error}")
+        raise Exception(f"Failed to create draft: {result.error}")
 
     def save_draft(self,
                   draft_id: str,
                   draft_folder: Optional[str] = None) -> DraftInfo:
         """
-        保存草稿并生成下载链接
+        Save a draft and generate a download URL.
 
         Args:
-            draft_id: 草稿 ID
-            draft_folder: 草稿文件夹路径
+            draft_id: Draft ID.
+            draft_folder: Draft folder path.
 
         Returns:
-            DraftInfo: 包含 draft_url 的草稿信息
+            DraftInfo: Draft info including draft_url.
         """
         result = self._post("/save_draft",
                            draft_id=draft_id,
@@ -196,17 +196,17 @@ class VectCutClient:
                 draft_folder=result.draft_folder,
                 draft_url=result.draft_url
             )
-        raise Exception(f"保存草稿失败: {result.error}")
+        raise Exception(f"Failed to save draft: {result.error}")
 
     def query_draft_status(self, draft_id: str) -> Dict[str, Any]:
-        """查询草稿状态"""
+        """Query draft status"""
         return self._post("/query_draft_status", draft_id=draft_id)
 
     def query_script(self, draft_id: str) -> Dict[str, Any]:
-        """查询草稿脚本内容"""
+        """Query draft script content"""
         return self._post("/query_script", draft_id=draft_id)
 
-    # ==================== 素材添加 ====================
+    # ==================== Media operations ====================
 
     def add_video(self,
                  draft_id: str,
@@ -227,26 +227,26 @@ class VectCutClient:
                  background_blur: Optional[int] = None,
                  **kwargs) -> bool:
         """
-        添加视频轨道
+        Add video track
 
         Args:
-            draft_id: 草稿 ID
-            video_url: 视频 URL
-            start: 视频开始时间(秒)
-            end: 视频结束时间(秒)
-            target_start: 在时间轴上的开始时间
-            speed: 播放速度
-            volume: 音量 (0.0-1.0)
-            scale_x/scale_y: 缩放比例
-            transform_x/transform_y: 位置偏移
-            track_name: 轨道名称
-            transition: 转场类型
-            transition_duration: 转场时长(秒)
-            mask_type: 蒙版类型
-            background_blur: 背景模糊级别(1-4)
+            draft_id: Draft ID
+            video_url: Video URL
+            start: Video start time (seconds)
+            end: Video end time (seconds)
+            target_start: Start time on timeline
+            speed: Playback speed
+            volume: Volume (0.0-1.0)
+            scale_x/scale_y: Scale ratio
+            transform_x/transform_y: Position offset
+            track_name: Track name
+            transition: Transition type
+            transition_duration: Transition duration (seconds)
+            mask_type: Mask type
+            background_blur: Background blur level (1-4)
 
         Returns:
-            bool: 是否成功
+            bool: Success flag
         """
         result = self._post("/add_video",
                            draft_id=draft_id,
@@ -279,20 +279,20 @@ class VectCutClient:
                  track_name: str = "audio_main",
                  **kwargs) -> bool:
         """
-        添加音频轨道
+        Add audio track
 
         Args:
-            draft_id: 草稿 ID
-            audio_url: 音频 URL
-            start: 音频开始时间
-            end: 音频结束时间
-            target_start: 在时间轴上的开始时间
-            speed: 播放速度
-            volume: 音量 (0.0-1.0)
-            track_name: 轨道名称
+            draft_id: Draft ID
+            audio_url: Audio URL
+            start: Audio start time
+            end: Audio end time
+            target_start: Start time on timeline
+            speed: Playback speed
+            volume: Volume (0.0-1.0)
+            track_name: Track name
 
         Returns:
-            bool: 是否成功
+            bool: Success flag
         """
         result = self._post("/add_audio",
                            draft_id=draft_id,
@@ -320,21 +320,21 @@ class VectCutClient:
                  transition: Optional[str] = None,
                  **kwargs) -> bool:
         """
-        添加图片素材
+        Add image material
 
         Args:
-            draft_id: 草稿 ID
-            image_url: 图片 URL
-            start: 开始时间
-            end: 结束时间
-            target_start: 在时间轴上的开始时间
-            scale_x/scale_y: 缩放比例
-            transform_x/transform_y: 位置偏移
-            animation_type: 动画类型
-            transition: 转场类型
+            draft_id: Draft ID
+            image_url: Image URL
+            start: Start time
+            end: End time
+            target_start: Start time on timeline
+            scale_x/scale_y: Scale ratio
+            transform_x/transform_y: Position offset
+            animation_type: Animation type
+            transition: Transition type
 
         Returns:
-            bool: 是否成功
+            bool: Success flag
         """
         result = self._post("/add_image",
                            draft_id=draft_id,
@@ -376,33 +376,33 @@ class VectCutClient:
                 alignment_v: str = "middle",
                 **kwargs) -> bool:
         """
-        添加文字元素
+        Add text element
 
         Args:
-            draft_id: 草稿 ID
-            text: 文字内容
-            start: 开始时间
-            end: 结束时间
-            font: 字体名称
-            font_size: 字体大小
-            font_color: 字体颜色 (HEX)
-            stroke_enabled: 是否启用描边
-            stroke_color: 描边颜色
-            stroke_width: 描边宽度
-            shadow_enabled: 是否启用阴影
-            shadow_color: 阴影颜色
-            background_color: 背景颜色
-            background_alpha: 背景透明度
-            background_round_radius: 背景圆角半径
-            text_intro: 入场动画
-            text_outro: 出场动画
-            text_styles: 多样式文字
-            pos_x/pos_y: 位置
-            alignment_h: 水平对齐
-            alignment_v: 垂直对齐
+            draft_id: Draft ID
+            text: Text content
+            start: Start time
+            end: End time
+            font: Font name
+            font_size: Font size
+            font_color: Font color (HEX)
+            stroke_enabled: Enable stroke
+            stroke_color: Stroke color
+            stroke_width: Stroke width
+            shadow_enabled: Enable shadow
+            shadow_color: Shadow color
+            background_color: Background color
+            background_alpha: Background alpha
+            background_round_radius: Background corner radius
+            text_intro: Intro animation
+            text_outro: Outro animation
+            text_styles: Multi-style text
+            pos_x/pos_y: Position
+            alignment_h: Horizontal alignment
+            alignment_v: Vertical alignment
 
         Returns:
-            bool: 是否成功
+            bool: Success flag
         """
         result = self._post("/add_text",
                            draft_id=draft_id,
@@ -444,23 +444,23 @@ class VectCutClient:
                     time_offset: float = 0,
                     **kwargs) -> bool:
         """
-        添加 SRT 字幕
+        Add SRT subtitles
 
         Args:
-            draft_id: 草稿 ID
-            srt_url: SRT 文件 URL
-            font: 字体名称
-            font_size: 字体大小
-            font_color: 字体颜色
-            stroke_enabled: 是否启用描边
-            stroke_color: 描边颜色
-            stroke_width: 描边宽度
-            background_alpha: 背景透明度
-            pos_y: 垂直位置
-            time_offset: 时间偏移(秒)
+            draft_id: Draft ID
+            srt_url: SRT file URL
+            font: Font name
+            font_size: Font size
+            font_color: Font color
+            stroke_enabled: Enable stroke
+            stroke_color: Stroke color
+            stroke_width: Stroke width
+            background_alpha: Background alpha
+            pos_y: Vertical position
+            time_offset: Time offset (seconds)
 
         Returns:
-            bool: 是否成功
+            bool: Success flag
         """
         result = self._post("/add_subtitle",
                            draft_id=draft_id,
@@ -492,22 +492,22 @@ class VectCutClient:
                    alpha: float = 1.0,
                    **kwargs) -> bool:
         """
-        添加贴纸
+        Add sticker
 
         Args:
-            draft_id: 草稿 ID
-            sticker_id: 贴纸 ID
-            start: 开始时间
-            end: 结束时间
-            target_start: 在时间轴上的开始时间
-            scale_x/scale_y: 缩放比例
-            transform_x/transform_y: 位置偏移
-            flip_horizontal: 水平翻转
-            flip_vertical: 垂直翻转
-            alpha: 透明度
+            draft_id: Draft ID
+            sticker_id: Sticker ID
+            start: Start time
+            end: End time
+            target_start: Start time on timeline
+            scale_x/scale_y: Scale ratio
+            transform_x/transform_y: Position offset
+            flip_horizontal: Flip horizontally
+            flip_vertical: Flip vertically
+            alpha: Opacity
 
         Returns:
-            bool: 是否成功
+            bool: Success flag
         """
         result = self._post("/add_sticker",
                            draft_id=draft_id,
@@ -535,19 +535,19 @@ class VectCutClient:
                   effect_params: Optional[List] = None,
                   **kwargs) -> bool:
         """
-        添加视频特效
+        Add video effect
 
         Args:
-            draft_id: 草稿 ID
-            effect_type: 特效类型
-            start: 开始时间
-            end: 结束时间
-            target_start: 在时间轴上的开始时间
-            intensity: 特效强度
-            effect_params: 特效参数
+            draft_id: Draft ID
+            effect_type: Effect type
+            start: Start time
+            end: End time
+            target_start: Start time on timeline
+            intensity: Effect intensity
+            effect_params: Effect parameters
 
         Returns:
-            bool: 是否成功
+            bool: Success flag
         """
         result = self._post("/add_effect",
                            draft_id=draft_id,
@@ -568,17 +568,17 @@ class VectCutClient:
                           values: List[str],
                           **kwargs) -> bool:
         """
-        添加关键帧动画
+        Add keyframe animation
 
         Args:
-            draft_id: 草稿 ID
-            track_name: 轨道名称
-            property_types: 属性类型列表
-            times: 关键帧时间点
-            values: 对应属性值
+            draft_id: Draft ID
+            track_name: Track name
+            property_types: Property type list
+            times: Keyframe times
+            values: Property values
 
         Returns:
-            bool: 是否成功
+            bool: Success flag
         """
         result = self._post("/add_video_keyframe",
                            draft_id=draft_id,
@@ -589,55 +589,55 @@ class VectCutClient:
                            **kwargs)
         return result.success
 
-    # ==================== 查询接口 ====================
+    # ==================== Query interfaces ====================
 
     def get_intro_animation_types(self) -> List[str]:
-        """获取入场动画类型列表"""
+        """Get intro animation type list"""
         return self._get("/get_intro_animation_types")
 
     def get_outro_animation_types(self) -> List[str]:
-        """获取出场动画类型列表"""
+        """Get outro animation type list"""
         return self._get("/get_outro_animation_types")
 
     def get_transition_types(self) -> List[str]:
-        """获取转场效果类型列表"""
+        """Get transition type list"""
         return self._get("/get_transition_types")
 
     def get_mask_types(self) -> List[str]:
-        """获取蒙版类型列表"""
+        """Get mask type list"""
         return self._get("/get_mask_types")
 
     def get_audio_effect_types(self) -> List[str]:
-        """获取音频特效类型列表"""
+        """Get audio effect type list"""
         return self._get("/get_audio_effect_types")
 
     def get_font_types(self) -> List[str]:
-        """获取字体类型列表"""
+        """Get font type list"""
         return self._get("/get_font_types")
 
     def get_text_intro_types(self) -> List[str]:
-        """获取文字入场动画列表"""
+        """Get text intro animation list"""
         return self._get("/get_text_intro_types")
 
     def get_text_outro_types(self) -> List[str]:
-        """获取文字出场动画列表"""
+        """Get text outro animation list"""
         return self._get("/get_text_outro_types")
 
     def get_video_scene_effect_types(self) -> List[str]:
-        """获取场景特效类型列表"""
+        """Get scene effect type list"""
         return self._get("/get_video_scene_effect_types")
 
-    # ==================== 工具方法 ====================
+    # ==================== Utilities ====================
 
     def get_duration(self, media_url: str) -> Optional[float]:
         """
-        获取媒体文件时长
+        Get media duration
 
         Args:
-            media_url: 媒体 URL
+            media_url: Media URL
 
         Returns:
-            时长(秒)，失败返回 None
+            Duration in seconds; returns None on failure
         """
         result = self._post("/get_duration", media_url=media_url)
         if result.success:
@@ -645,7 +645,7 @@ class VectCutClient:
         return None
 
     def close(self):
-        """关闭客户端会话"""
+        """Close client session"""
         self.session.close()
 
     def __enter__(self):
@@ -655,7 +655,7 @@ class VectCutClient:
         self.close()
 
 
-# ==================== 便捷函数 ====================
+# ==================== Convenience function ====================
 
 def create_quick_video(base_url: str = "http://localhost:9001",
                       video_url: str = "",
@@ -663,17 +663,17 @@ def create_quick_video(base_url: str = "http://localhost:9001",
                       bgm_url: str = "",
                       resolution: Resolution = Resolution.VERTICAL) -> Optional[str]:
     """
-    快速创建简单视频
+    Quickly create a simple video
 
     Args:
-        base_url: API 服务器地址
-        video_url: 背景视频 URL
-        text_content: 文字内容
-        bgm_url: 背景音乐 URL
-        resolution: 视频分辨率
+        base_url: API server URL
+        video_url: Background video URL
+        text_content: Text content
+        bgm_url: Background music URL
+        resolution: Video resolution
 
     Returns:
-        草稿 URL，失败返回 None
+        Draft URL; returns None on failure
     """
     with VectCutClient(base_url) as client:
         draft = client.create_draft(width=resolution.value[0], height=resolution.value[1])
@@ -700,20 +700,20 @@ def create_quick_video(base_url: str = "http://localhost:9001",
 
 
 if __name__ == "__main__":
-    # 示例用法
+    # Example usage
     with VectCutClient() as client:
-        # 创建草稿
+        # Create draft
         draft = client.create_draft(width=1080, height=1920)
-        print(f"创建草稿: {draft.draft_id}")
+        print(f"Draft created: {draft.draft_id}")
 
-        # 添加视频
+        # Add video
         client.add_video(
             draft.draft_id,
             "https://example.com/video.mp4",
             volume=0.6
         )
 
-        # 添加文字
+        # Add text
         client.add_text(
             draft.draft_id,
             "Hello VectCutAPI!",
@@ -724,6 +724,6 @@ if __name__ == "__main__":
             shadow_enabled=True
         )
 
-        # 保存草稿
+        # Save draft
         result = client.save_draft(draft.draft_id)
-        print(f"草稿已保存: {result.draft_url}")
+        print(f"Draft saved: {result.draft_url}")

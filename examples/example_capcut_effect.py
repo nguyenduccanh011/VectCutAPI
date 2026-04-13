@@ -2,10 +2,10 @@ import os
 import shutil
 import sys
 
-# 添加父目录到系统路径
+# Add parent directory to the system path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-# 从example.py中导入必要的函数
+# Import required functions from example.py
 from example import add_video_impl, add_effect, save_draft_impl
 
 def example_capcut_effect():

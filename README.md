@@ -11,7 +11,7 @@ We have open-sourced our interface code on GitHub, making it easy for various AI
 
 Enjoy It!  😀😀😀
 
-[中文说明](README-zh.md) 
+[Chinese Guide](README-zh.md) 
 
 ### Advantages
 
@@ -95,13 +95,49 @@ python capcut_server.py # Start the HTTP API server, default port: 9001
 
 python mcp_server.py # Start the MCP protocol service, supports stdio communication
 ```
+
+### 4\. Language configuration (new)
+
+The project now supports runtime message localization through environment variables:
+
+- `VECTCUT_LANG=en` (default)
+- `VECTCUT_LANG=vi`
+- `VECTCUT_LANG=zh`
+
+Examples:
+
+```bash
+# Linux/macOS
+export VECTCUT_LANG=vi
+python mcp_server.py
+
+# Windows PowerShell
+$env:VECTCUT_LANG = "vi"
+python mcp_server.py
+```
+
+Translation files are stored in `locales/en.json`, `locales/vi.json`, and `locales/zh.json`.
+
+### 5\. Language quality check
+
+Use this script to detect accidental Chinese text in English-only files:
+
+```bash
+python scripts/check_cjk.py
+```
+
+Notes:
+
+- The script excludes metadata and Chinese documentation paths by default.
+- Update exclusions in `scripts/check_cjk.py` if you add bilingual files.
+
 ## Skill Integration Guide
-[Skill中文文档](https://github.com/sun-guannan/VectCutAPI/blob/main/vectcut-skill/README.md)
+[Skill Chinese Guide](https://github.com/sun-guannan/VectCutAPI/blob/main/vectcut-skill/README.md)
 [Skill Guide](https://github.com/sun-guannan/VectCutAPI/blob/main/vectcut-skill/README_EN.md)
 
 ## MCP Integration Guide
 
-[MCP 中文文档](https://www.google.com/search?q=./MCP_%E6%96%87%E6%A1%A3_%E4%B8%AD%E6%96%87.md) • [MCP English Guide](https://www.google.com/search?q=./MCP_Documentation_English.md)
+[MCP Chinese Guide](./MCP_文档_中文.md) • [MCP English Guide](./MCP_Documentation_English.md)
 
 ### 1\. Client Configuration
 
@@ -166,7 +202,7 @@ response = requests.post("http://localhost:9001/add_text", json={
     "text": "Welcome to VectCutAPI",
     "start": 0,
     "end": 5,
-    "font": "Source Han Sans",read
+    "font": "Source Han Sans",
     "font_color": "#FFD700",
     "font_size": 48,
     "shadow_enabled": True,

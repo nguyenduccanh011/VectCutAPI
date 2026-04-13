@@ -31,10 +31,21 @@ from add_sticker_impl import add_sticker_impl
 from create_draft import create_draft
 from util import generate_draft_url as utilgenerate_draft_url, hex_to_rgb
 from pyJianYingDraft.text_segment import TextStyleRange, Text_style, Text_border
+from i18n import get_language
 
 from settings.local import IS_CAPCUT_ENV, DRAFT_DOMAIN, PREVIEW_ROUTER, PORT
 
 app = Flask(__name__)
+
+
+def _default_font_for_locale() -> str:
+    """Return a locale-aware default font name."""
+    # Keep defaults Latin-friendly for en/vi while allowing a dedicated zh fallback.
+    return {
+        "zh": "Source Han Sans",
+        "vi": "Arial",
+        "en": "Arial",
+    }.get(get_language(), "Arial")
  
 @app.route('/add_video', methods=['POST'])
 def add_video():
@@ -233,7 +244,7 @@ def add_subtitle():
     time_offset = data.get('time_offset', 0.0)  # Default 0 seconds
     
     # Font style parameters
-    font = data.get('font', "思源粗宋")
+    font = data.get('font', _default_font_for_locale())
     font_size = data.get('font_size', 5.0)  # Default size 5.0
     bold = data.get('bold', False)  # Default not bold
     italic = data.get('italic', False)  # Default not italic
@@ -325,7 +336,7 @@ def add_text():
     draft_id = data.get('draft_id')
     transform_y = data.get('transform_y', 0)
     transform_x = data.get('transform_x', 0)
-    font = data.get('font', "文轩体")
+    font = data.get('font', _default_font_for_locale())
     font_color = data.get('color', data.get('font_color', "#FF0000"))  # Support both 'color' and 'font_color'
     font_size = data.get('size', data.get('font_size', 8.0))  # Support both 'size' and 'font_size'
     track_name = data.get('track_name', "text_main")
