@@ -243,6 +243,33 @@ def save_draft_background(draft_id, draft_folder, task_id):
                 logger.info(f"Cleaned up temporary draft folder: {os.path.join(current_dir, draft_id)}")
 
     
+        # Move draft to CapCut folder if draft_folder is provided
+        if draft_folder and not IS_UPLOAD_DRAFT:
+            try:
+                update_task_field(task_id, "message", "Moving draft to CapCut folder")
+                logger.info(f"Task {task_id}: Moving draft to CapCut folder")
+                
+                source_path = os.path.join(current_dir, draft_id)
+                dest_path = os.path.join(draft_folder, draft_id)
+                
+                # Check if source exists
+                if os.path.exists(source_path):
+                    # Create CapCut folder if it doesn't exist
+                    os.makedirs(draft_folder, exist_ok=True)
+                    
+                    # Remove destination if exists
+                    if os.path.exists(dest_path):
+                        shutil.rmtree(dest_path)
+                        logger.info(f"Removed existing draft at {dest_path}")
+                    
+                    # Move draft
+                    shutil.move(source_path, dest_path)
+                    logger.info(f"Successfully moved draft from {source_path} to {dest_path}")
+                else:
+                    logger.warning(f"Source draft folder not found at {source_path}")
+            except Exception as e:
+                logger.error(f"Failed to move draft to CapCut folder: {str(e)}", exc_info=True)
+        
         # Update task status - Completed
         update_task_field(task_id, "status", "completed")
         update_task_field(task_id, "progress", 100)

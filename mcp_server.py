@@ -142,7 +142,7 @@ TOOLS = [
                 "background_alpha": {"type": "number", "default": 1.0, "description": "Background alpha"},
                 "background_style": {"type": "integer", "default": 0, "description": "Background style"},
                 "background_round_radius": {"type": "number", "default": 0.0, "description": "Background corner radius"},
-                "text_styles": {"type": "array", "description": "Text style ranges"}
+                "text_styles": {"type": "array", "items": {"type": "object"}, "description": "Text style ranges"}
             },
             "required": ["text", "start", "end"]
         }
@@ -186,7 +186,7 @@ TOOLS = [
                 "start": {"type": "number", "default": 0, "description": "Start time (seconds)"},
                 "end": {"type": "number", "default": 3.0, "description": "End time (seconds)"},
                 "track_name": {"type": "string", "default": "effect_01", "description": "Track name"},
-                "params": {"type": "array", "description": "Effect parameter list"},
+                "params": {"type": "array", "items": {"type": ["string", "number"]}, "description": "Effect parameter list"},
                 "width": {"type": "integer", "default": 1080, "description": "Video width"},
                 "height": {"type": "integer", "default": 1920, "description": "Video height"}
             },
@@ -227,9 +227,9 @@ TOOLS = [
                 "property_type": {"type": "string", "description": "Keyframe property type(position_x, position_y, rotation, scale_x, scale_y, uniform_scale, alpha, saturation, contrast, brightness, volume)"},
                 "time": {"type": "number", "default": 0.0, "description": "Keyframe time (seconds)"},
                 "value": {"type": "string", "description": "Keyframe value"},
-                "property_types": {"type": "array", "description": "Batch mode: keyframe property type list"},
-                "times": {"type": "array", "description": "Batch mode: keyframe times"},
-                "values": {"type": "array", "description": "Batch mode: keyframe value list"}
+                "property_types": {"type": "array", "items": {"type": "string"}, "description": "Batch mode: keyframe property type list"},
+                "times": {"type": "array", "items": {"type": "number"}, "description": "Batch mode: keyframe times"},
+                "values": {"type": "array", "items": {"type": "string"}, "description": "Batch mode: keyframe value list"}
             }
         }
     },
@@ -344,7 +344,13 @@ def execute_tool(tool_name: str, arguments: Dict[str, Any]) -> Dict[str, Any]:
                 result = {"duration": duration}
                 
             elif tool_name == "save_draft":
-                save_result = save_draft_impl(**arguments)
+                # Auto-load draft_folder from config if not provided
+                from settings.local import DRAFT_FOLDER
+                arguments_with_folder = arguments.copy()
+                if not arguments_with_folder.get("draft_folder") and DRAFT_FOLDER:
+                    arguments_with_folder["draft_folder"] = DRAFT_FOLDER
+                
+                save_result = save_draft_impl(**arguments_with_folder)
                 if isinstance(save_result, dict) and "draft_url" in save_result:
                     result = {"draft_url": save_result["draft_url"]}
                 else:
