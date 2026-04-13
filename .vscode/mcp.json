@@ -2,10 +2,11 @@
   "servers": {
     "capcut-api": {
       "type": "stdio",
-      "command": ".vscode/run-mcp.cmd",
-      "cwd": "${workspaceFolder}",
+      "command": "python",
+      "args": ["mcp_server.py"],
+      "cwd": "F:/PROJECTS/VectCutAPI",
       "env": {
-        "PYTHONPATH": "${workspaceFolder}"
+        "PYTHONPATH": "F:/PROJECTS/VectCutAPI"
       }
     }
   }
