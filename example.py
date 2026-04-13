@@ -2,7 +2,7 @@ import requests
 import json
 import sys
 import time
-from settings.local import PORT
+from settings.local import PORT, DRAFT_FOLDER
 from util import timing_decorator
 import functools
 import threading
@@ -16,7 +16,8 @@ import os
 BASE_URL = f"http://localhost:{PORT}"
 LICENSE_KEY = "trial"  # Trial license key
 
-CAPCUT_DRAFT_FOLDER = "C:/Users/DUC CANH PC/AppData/Local/CapCut/User Data/Projects/com.lveditor.draft"
+# Draft folder paths - will be loaded from config.json
+CAPCUT_DRAFT_FOLDER = DRAFT_FOLDER or "C:/Users/DUC CANH PC/AppData/Local/CapCut/User Data/Projects/com.lveditor.draft"
 JIANYINGPRO_DRAFT_FOLDER = "/Users/sunguannan/Movies/JianyingPro/User Data/Projects/com.lveditor.draft"
 
 def make_request(endpoint, data, method='POST'):
