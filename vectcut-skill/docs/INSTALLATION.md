@@ -1,107 +1,107 @@
-# 安装指南
+# Hướng Dẫn Cài Đặt
 
-本文档提供 VectCutAPI Skill 的详细安装说明。
-
----
-
-## 目录
-
-1. [系统要求](#系统要求)
-2. [安装 VectCutAPI](#安装-vectcutapi)
-3. [安装 Skill](#安装-skill)
-4. [验证安装](#验证安装)
-5. [卸载](#卸载)
+Tài liệu này cung cấp hướng dẫn cài đặt chi tiết cho VectCutAPI Skill.
 
 ---
 
-## 系统要求
+## Mục Lục
 
-### 必需组件
+1. [Yêu Cầu Hệ Thống](#yêu-cầu-hệ-thống)
+2. [Cài Đặt VectCutAPI](#cài-đặt-vectcutapi)
+3. [Cài Đặt Skill](#cài-đặt-skill)
+4. [Xác Minh Cài Đặt](#xác-minh-cài-đặt)
+5. [Gỡ Cài Đặt](#gỡ-cài-đặt)
 
-| 组件 | 最低版本 | 推荐版本 | 下载链接 |
+---
+
+## Yêu Cầu Hệ Thống
+
+### Các Thành Phần Bắt Buộc
+
+| Thành Phần | Phiên Bản Tối Thiểu | Phiên Bản Được Đề Xuất | Liên Kết Tải |
 |------|----------|----------|----------|
 | Python | 3.10 | 3.11+ | [python.org](https://www.python.org/downloads/) |
-| Claude Code | 最新版 | 最新版 | [claude.com](https://claude.com/claude-code) |
-| 剪映/CapCut | 最新版 | 最新版 | [capcut.com](https://www.capcut.com/) |
+| Claude Code | Mới Nhất | Mới Nhất | [claude.com](https://claude.com/claude-code) |
+| JianYing/CapCut | Mới Nhất | Mới Nhất | [capcut.com](https://www.capcut.com/) |
 
-### 可选组件
+### Các Thành Phần Tùy Chọn
 
-| 组件 | 用途 | 下载链接 |
+| Thành Phần | Mục Đích | Liên Kết Tải |
 |------|------|----------|
-| FFmpeg | 视频处理 | [ffmpeg.org](https://ffmpeg.org/download.html) |
-| Git | 版本控制 | [git-scm.com](https://git-scm.com/downloads) |
+| FFmpeg | Xử Lý Video | [ffmpeg.org](https://ffmpeg.org/download.html) |
+| Git | Kiểm Soát Phiên Bản | [git-scm.com](https://git-scm.com/downloads) |
 
-### 操作系统支持
+### Hỗ Trợ Hệ Điều Hành
 
-- **Windows**: Windows 10/11 (推荐)
-- **macOS**: macOS 11+ (Big Sur 或更高)
+- **Windows**: Windows 10/11 (Được Đề Xuất)
+- **macOS**: macOS 11+ (Big Sur hoặc Cao Hơn)
 - **Linux**: Ubuntu 20.04+, Debian 11+, CentOS 8+
 
 ---
 
-## 安装 VectCutAPI
+## Cài Đặt VectCutAPI
 
-VectCutAPI 是本技能依赖的核心服务。
+VectCutAPI là dịch vụ cốt lõi mà kỹ năng này phụ thuộc vào.
 
-### Windows 安装
+### Cài Đặt Windows
 
-#### 步骤 1: 安装 Python
+#### Bước 1: Cài Đặt Python
 
-1. 访问 [python.org](https://www.python.org/downloads/)
-2. 下载 Python 3.10 或更高版本
-3. 运行安装程序，**务必勾选 "Add Python to PATH"**
-4. 验证安装：
+1. Truy cập [python.org](https://www.python.org/downloads/)
+2. Tải xuống Python 3.10 hoặc cao hơn
+3. Chạy trình cài đặt, **Hãy Chắc Chắn Đánh Dấu "Add Python to PATH"**
+4. Xác Minh Cài Đặt:
    ```cmd
    python --version
    ```
 
-#### 步骤 2: 克隆项目
+#### Bước 2: Nhân Bản Dự Án
 
 ```cmd
-# 使用 Git (推荐)
+# Sử Dụng Git (Được Đề Xuất)
 git clone https://github.com/sun-guannan/VectCutAPI.git
 cd VectCutAPI
 
-# 或直接下载 ZIP
+# Hoặc Tải Trực Tiếp ZIP
 # https://github.com/sun-guannan/VectCutAPI/archive/refs/heads/main.zip
 ```
 
-#### 步骤 3: 创建虚拟环境
+#### Bước 3: Tạo Môi Trường Ảo
 
 ```cmd
-# 创建虚拟环境
+# Tạo Môi Trường Ảo
 python -m venv venv-vectcut
 
-# 激活虚拟环境
+# Kích Hoạt Môi Trường Ảo
 venv-vectcut\Scripts\activate
 
-# 验证激活 (命令行前缀应显示 (venv-vectcut))
+# Xác Minh Kích Hoạt (Tiền Tố Dòng Lệnh Sẽ Hiển Thị (venv-vectcut))
 ```
 
-#### 步骤 4: 安装依赖
+#### Bước 4: Cài Đặt Phụ Thuộc
 
 ```cmd
-# 升级 pip
+# Nâng Cấp pip
 python -m pip install --upgrade pip
 
-# 安装基础依赖
+# Cài Đặt Phụ Thuộc Cơ Bản
 pip install -r requirements.txt
 
-# 安装 MCP 支持 (可选)
+# Cài Đặt Hỗ Trợ MCP (Tùy Chọn)
 pip install -r requirements-mcp.txt
 ```
 
-#### 步骤 5: 配置
+#### Bước 5: Cấu Hình
 
 ```cmd
-# 复制配置文件
+# Sao Chép Tệp Cấu Hình
 copy config.json.example config.json
 
-# 使用记事本编辑配置
+# Chỉnh Sửa Cấu Hình Bằng Notepad
 notepad config.json
 ```
 
-根据需要修改配置项：
+Sửa Đổi Các Loại Cấu Hình Khi Cần Thiết:
 
 ```json
 {
@@ -113,25 +113,25 @@ notepad config.json
 }
 ```
 
-#### 步骤 6: 启动服务
+#### Bước 6: Khởi Động Dịch Vụ
 
 ```cmd
-# 启动 HTTP API 服务器
+# Khởi Động HTTP API Server
 python capcut_server.py
 
-# 服务将在 http://localhost:9001 启动
+# Dịch Vụ Sẽ Khởi Động Tại http://localhost:9001
 ```
 
-### macOS/Linux 安装
+### Cài Đặt macOS/Linux
 
-#### 步骤 1: 安装 Python
+#### Bước 1: Cài Đặt Python
 
 **macOS:**
 ```bash
-# 使用 Homebrew (推荐)
+# Sử Dụng Homebrew (Được Đề Xuất)
 brew install python@3.11
 
-# 或从官网下载安装包
+# Hoặc Tải Gói Cài Đặt Từ Trang Web Chính Thức
 # https://www.python.org/downloads/
 ```
 
@@ -146,118 +146,118 @@ sudo apt install python3.11 python3.11-venv python3-pip
 sudo yum install python311 python311-pip
 ```
 
-#### 步骤 2: 克隆项目
+#### Bước 2: Nhân Bản Dự Án
 
 ```bash
 git clone https://github.com/sun-guannan/VectCutAPI.git
 cd VectCutAPI
 ```
 
-#### 步骤 3: 创建虚拟环境
+#### Bước 3: Tạo Môi Trường Ảo
 
 ```bash
-# 创建虚拟环境
+# Tạo Môi Trường Ảo
 python3 -m venv venv-vectcut
 
-# 激活虚拟环境
+# Kích Hoạt Môi Trường Ảo
 source venv-vectcut/bin/activate
 ```
 
-#### 步骤 4: 安装依赖
+#### Bước 4: Cài Đặt Phụ Thuộc
 
 ```bash
-# 升级 pip
+# Nâng Cấp pip
 python -m pip install --upgrade pip
 
-# 安装基础依赖
+# Cài Đặt Phụ Thuộc Cơ Bản
 pip install -r requirements.txt
 
-# 安装 MCP 支持 (可选)
+# Cài Đặt Hỗ Trợ MCP (Tùy Chọn)
 pip install -r requirements-mcp.txt
 ```
 
-#### 步骤 5: 配置
+#### Bước 5: Cấu Hình
 
 ```bash
-# 复制配置文件
+# Sao Chép Tệp Cấu Hình
 cp config.json.example config.json
 
-# 编辑配置
-nano config.json  # 或使用 vim、其他编辑器
+# Chỉnh Sửa Cấu Hình
+nano config.json  # Hoặc Sử Dụng vim, Trình Chỉnh Sửa Khác
 ```
 
-#### 步骤 6: 启动服务
+#### Bước 6: Khởi Động Dịch Vụ
 
 ```bash
-# 启动 HTTP API 服务器
+# Khởi Động HTTP API Server
 python capcut_server.py
 
-# 服务将在 http://localhost:9001 启动
+# Dịch Vụ Sẽ Khởi Động Tại http://localhost:9001
 ```
 
 ---
 
-## 安装 Skill
+## Cài Đặt Skill
 
-### Windows 安装
+### Cài Đặt Windows
 
-#### 方法 1: 使用 Git (推荐)
+#### Phương Pháp 1: Sử Dụng Git (Được Đề Xuất)
 
 ```powershell
-# 克隆项目
+# Nhân Bản Dự Án
 git clone https://github.com/your-username/vectcut-skill.git
 cd vectcut-skill
 
-# 复制 skill 文件
+# Sao Chép Tệp Skill
 Copy-Item -Path "skill\*" -Destination "$env:USERPROFILE\.claude\skills\public\vectcut-api\" -Recurse -Force
 ```
 
-#### 方法 2: 手动复制
+#### Phương Pháp 2: Sao Chép Thủ Công
 
-1. 下载项目的 ZIP 文件
-2. 解压到任意目录
-3. 手动复制 `skill` 文件夹内容到：
+1. Tải Tệp ZIP Của Dự Án
+2. Giải Nén Vào Thư Mục Bất Kỳ
+3. Sao Chép Nội Dung Thư Mục `skill` Vào:
    ```
-   C:\Users\你的用户名\.claude\skills\public\vectcut-api\
+   C:\Users\Tên Người Dùng Của Bạn\.claude\skills\public\vectcut-api\
    ```
 
-#### 方法 3: 使用 CMD
+#### Phương Pháp 3: Sử Dụng CMD
 
 ```cmd
 xcopy "skill\*" "%USERPROFILE%\.claude\skills\public\vectcut-api\" /E /I /Y
 ```
 
-### macOS/Linux 安装
+### Cài Đặt macOS/Linux
 
 ```bash
-# 克隆项目
+# Nhân Bản Dự Án
 git clone https://github.com/your-username/vectcut-skill.git
 cd vectcut-skill
 
-# 复制 skill 文件
+# Sao Chép Tệp Skill
 cp -r skill/* ~/.claude/skills/public/vectcut-api/
 
-# 或创建符号链接 (推荐)
+# Hoặc Tạo Liên Kết Tượng Trưng (Được Đề Xuất)
 ln -s $(pwd)/skill ~/.claude/skills/public/vectcut-api
 ```
 
 ---
 
-## 验证安装
+## Xác Minh Cài Đặt
 
-### 1. 验证 VectCutAPI 服务
+### 1. Xác Minh Dịch Vụ VectCutAPI
 
 ```bash
-# 使用 curl
+# Sử Dụng curl
 curl http://localhost:9001/
 
-# 或使用浏览器访问
+# Hoặc Sử Dụng Trình Duyệt Để Truy Cập
 # http://localhost:9001/
 ```
 
-应该看到 API 文档页面。
+Bạn Sẽ Thấy Trang Tài Liệu API.
 
-### 2. 验证 Skill 文件
+### 2. Xác Minh Tệp Skill
 
 ```bash
 # Windows
@@ -267,7 +267,7 @@ dir %USERPROFILE%\.claude\skills\public\vectcut-api
 ls -la ~/.claude/skills/public/vectcut-api
 ```
 
-应该看到以下文件：
+Bạn Sẽ Thấy Các Tệp Sau:
 ```
 SKILL.md
 scripts/
@@ -279,195 +279,195 @@ assets/
   └── examples/
 ```
 
-### 3. 验证 Claude Code 集成
+### 3. Xác Minh Tích Hợp Claude Code
 
-1. 启动 Claude Code
-2. 输入测试命令：
+1. Khởi Động Claude Code
+2. Nhập Lệnh Kiểm Tra:
    ```
-   使用 vectcut-api skill 创建一个视频草稿
+   Sử Dụng vectcut-api skill để tạo bản nháp video
    ```
-3. Claude 应该自动识别并加载技能
+3. Claude Sẽ Tự Động Xác Định Và Tải Kỹ Năng
 
-### 4. 运行测试脚本
+### 4. Chạy Kịch Bản Kiểm Tra
 
-创建测试文件 `test_installation.py`:
+Tạo Tệp Kiểm Tra `test_installation.py`:
 
 ```python
 from skill.scripts.vectcut_client import VectCutClient
 
 def test_installation():
-    """测试安装是否成功"""
-    print("测试 VectCutAPI 连接...")
+    """Kiểm Tra Xem Cài Đặt Có Thành Công Hay Không"""
+    print("Kiểm Tra Kết Nối VectCutAPI...")
 
     try:
-        # 创建客户端
+        # Tạo Máy Khách
         client = VectCutClient("http://localhost:9001")
 
-        # 测试创建草稿
+        # Kiểm Tra Tạo Bản Nháp
         draft = client.create_draft(width=1080, height=1920)
-        print(f"✓ 草稿创建成功: {draft.draft_id}")
+        print(f"✓ Bản Nháp Tạo Thành Công: {draft.draft_id}")
 
-        # 测试保存草稿
+        # Kiểm Tra Lưu Bản Nháp
         result = client.save_draft(draft.draft_id)
-        print(f"✓ 草稿保存成功: {result.draft_url}")
+        print(f"✓ Bản Nháp Lưu Thành Công: {result.draft_url}")
 
-        print("\n✅ 安装验证成功！")
+        print("\n✅ Xác Minh Cài Đặt Thành Công!")
         return True
 
     except Exception as e:
-        print(f"\n❌ 安装验证失败: {e}")
+        print(f"\n❌ Xác Minh Cài Đặt Thất Bại: {e}")
         return False
 
 if __name__ == "__main__":
     test_installation()
 ```
 
-运行测试：
+Chạy Kiểm Tra:
 ```bash
 python test_installation.py
 ```
 
 ---
 
-## 卸载
+## Gỡ Cài Đặt
 
-### Windows 卸载
+### Gỡ Cài Đặt Windows
 
-#### 卸载 Skill
+#### Gỡ Cài Đặt Skill
 
 ```cmd
-# 删除 skill 目录
+# Xóa Thư Mục Skill
 rmdir /s /q %USERPROFILE%\.claude\skills\public\vectcut-api
 ```
 
-#### 卸载 VectCutAPI
+#### Gỡ Cài Đặt VectCutAPI
 
 ```cmd
-# 停止服务 (Ctrl+C)
+# Dừng Dịch Vụ (Ctrl+C)
 
-# 激活虚拟环境
+# Kích Hoạt Môi Trường Ảo
 venv-vectcut\Scripts\activate
 
-# 卸载依赖
+# Gỡ Cài Đặt Phụ Thuộc
 pip freeze | xargs pip uninstall -y
 
-# 退出虚拟环境
+# Thoát Môi Trường Ảo
 deactivate
 
-# 删除项目目录
+# Xóa Thư Mục Dự Án
 rmdir /s /q VectCutAPI
 ```
 
-### macOS/Linux 卸载
+### Gỡ Cài Đặt macOS/Linux
 
-#### 卸载 Skill
+#### Gỡ Cài Đặt Skill
 
 ```bash
-# 删除 skill 目录
+# Xóa Thư Mục Skill
 rm -rf ~/.claude/skills/public/vectcut-api
 ```
 
-#### 卸载 VectCutAPI
+#### Gỡ Cài Đặt VectCutAPI
 
 ```bash
-# 停止服务 (Ctrl+C)
+# Dừng Dịch Vụ (Ctrl+C)
 
-# 激活虚拟环境
+# Kích Hoạt Môi Trường Ảo
 source venv-vectcut/bin/activate
 
-# 卸载依赖
+# Gỡ Cài Đặt Phụ Thuộc
 pip freeze | xargs pip uninstall -y
 
-# 退出虚拟环境
+# Thoát Môi Trường Ảo
 deactivate
 
-# 删除项目目录
+# Xóa Thư Mục Dự Án
 rm -rf VectCutAPI
 ```
 
 ---
 
-## 常见问题
+## Các Câu Hỏi Thường Gặp
 
-### Q1: Python 版本不兼容
+### Q1: Phiên Bản Python Không Tương Thích
 
-**问题**: `Python version error`
+**Vấn Đề**: `Python version error`
 
-**解决方案**:
+**Giải Pháp**:
 ```bash
-# 检查 Python 版本
+# Kiểm Tra Phiên Bản Python
 python --version
 
-# 如果版本低于 3.10，请升级 Python
+# Nếu Phiên Bản Dưới 3.10, Vui Lòng Nâng Cấp Python
 ```
 
-### Q2: 端口 9001 被占用
+### Q2: Cổng 9001 Bị Chiếm Dụng
 
-**问题**: `Port 9001 already in use`
+**Vấn Đề**: `Port 9001 already in use`
 
-**解决方案**:
+**Giải Pháp**:
 ```bash
-# Windows - 查找占用端口的进程
+# Windows - Tìm Quy Trình Chiếm Cổng
 netstat -ano | findstr :9001
 
-# 终止进程 (使用 PID)
+# Chấm Dứt Quy Trình (Sử Dụng PID)
 taskkill /PID <PID> /F
 
-# 或修改 config.json 中的端口
+# Hoặc Sửa Đổi Cổng Trong config.json
 ```
 
-### Q3: pip 安装依赖失败
+### Q3: Cài Đặt Phụ Thuộc Pip Thất Bại
 
-**问题**: `pip install failed`
+**Vấn Đề**: `pip install failed`
 
-**解决方案**:
+**Giải Pháp**:
 ```bash
-# 升级 pip
+# Nâng Cấp pip
 python -m pip install --upgrade pip
 
-# 使用国内镜像源
+# Sử Dụng Nguồn Gương Trong Nước
 pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
 ```
 
-### Q4: Claude Code 无法找到 Skill
+### Q4: Claude Code Không Thể Tìm Thấy Skill
 
-**问题**: `Skill not found`
+**Vấn Đề**: `Skill not found`
 
-**解决方案**:
-1. 检查 skill 目录路径是否正确
-2. 确认 SKILL.md 文件存在且格式正确
-3. 重启 Claude Code
+**Giải Pháp**:
+1. Kiểm Tra Đường Dẫn Thư Mục Skill Có Chính Xác Không
+2. Xác Nhận Tệp SKILL.md Tồn Tại Và Định Dạng Chính Xác
+3. Khởi Động Lại Claude Code
 
-### Q5: 虚拟环境激活失败
+### Q5: Kích Hoạt Môi Trường Ảo Thất Bại
 
-**问题**: `venv activation failed`
+**Vấn Đề**: `venv activation failed`
 
-**解决方案**:
+**Giải Pháp**:
 ```bash
-# Windows - 以管理员身份运行 PowerShell
+# Windows - Chạy PowerShell Với Quyền Quản Trị Viên
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 
-# 重新激活
+# Kích Hoạt Lại
 venv-vectcut\Scripts\Activate.ps1
 ```
 
 ---
 
-## 下一步
+## Bước Tiếp Theo
 
-安装完成后，建议查看：
+Sau Khi Cài Đặt Xong, Bạn Nên Xem Qua:
 
-1. [使用指南](USAGE.md) - 学习如何使用
-2. [工作流示例](skill/references/workflows.md) - 查看实际案例
-3. [API 参考](skill/references/api_reference.md) - 了解完整 API
+1. [Hướng Dẫn Sử Dụng](USAGE.md) - Học Cách Sử Dụng
+2. [Ví Dụ Workflow](skill/references/workflows.md) - Xem Các Trường Hợp Thực Tế
+3. [Tham Khảo API](skill/references/api_reference.md) - Tìm Hiểu API Đầy Đủ
 
 ---
 
-## 获取帮助
+## Nhận Trợ Giúp
 
-如果遇到问题：
+Nếu Gặp Vấn Đề:
 
-1. 查看 [故障排除](USAGE.md#故障排除) 部分
-2. 搜索 [Issues](https://github.com/your-username/vectcut-skill/issues)
-3. 提交新的 Issue
-4. 联系原项目 [VectCutAPI](https://github.com/sun-guannan/VectCutAPI)
+1. Xem Phần [Khắc Phục Sự Cố](USAGE.md#khắc-phục-sự-cố)
+2. Tìm Kiếm [Issues](https://github.com/your-username/vectcut-skill/issues)
+3. Tạo Issue Mới
+4. Liên Hệ Dự Án Gốc [VectCutAPI](https://github.com/sun-guannan/VectCutAPI)

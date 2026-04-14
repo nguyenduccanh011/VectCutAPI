@@ -1,29 +1,29 @@
-# VectCutAPI Skill 技术架构文档
+# Tài Liệu Kiến Trúc Kỹ Thuật VectCutAPI Skill
 
-## 概述
+## Tổng Quan
 
-本文档详细说明 VectCutAPI Skill 的技术架构、设计原则和实现细节。
+Tài liệu này trình bày chi tiết về kiến trúc kỹ thuật, nguyên tắc thiết kế và chi tiết thực hiện của VectCutAPI Skill.
 
 ---
 
-## 项目架构
+## Kiến Trúc Dự Án
 
-### 整体架构图
+### Sơ Đồ Kiến Trúc Tổng Quan
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │                         Claude Code                              │
-│                    (Anthropic CLI Tool)                          │
+│                   (Công cụ CLI của Anthropic)                    │
 └───────────────────────────┬─────────────────────────────────────┘
                             │
                             ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│                      Skill System                                │
+│                      Hệ Thống Skill                              │
 │  ┌──────────────────────────────────────────────────────────┐  │
-│  │  vectcut-api Skill                                        │  │
+│  │  Skill vectcut-api                                        │  │
 │  │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐   │  │
 │  │  │   SKILL.md   │  │  scripts/    │  │ references/  │   │  │
-│  │  │  (主文档)     │  │ (可执行代码) │  │  (参考文档)  │   │  │
+│  │  │ (Tài liệu)   │  │ (Mã thực thi) │  │ (Tài liệu)  │   │  │
 │  │  └──────────────┘  └──────────────┘  └──────────────┘   │  │
 │  └──────────────────────────────────────────────────────────┘  │
 └───────────────────────────┬─────────────────────────────────────┘
@@ -33,42 +33,42 @@
 │                      VectCutAPI                                  │
 │  ┌──────────────────────────────────────────────────────────┐  │
 │  │  HTTP API Server (capcut_server.py)                      │  │
-│  │  Port: 9001                                              │  │
+│  │  Cổng: 9001                                              │  │
 │  └──────────────────────────────────────────────────────────┘  │
 │  ┌──────────────────────────────────────────────────────────┐  │
-│  │  pyJianYingDraft (剪映草稿核心库)                         │  │
-│  │  - 草稿管理                                               │  │
-│  │  - 轨道操作                                               │  │
-│  │  - 片段处理                                               │  │
+│  │  pyJianYingDraft (Thư viện lõi quản lý bản nháp)        │  │
+│  │  - Quản lý bản nháp                                       │  │
+│  │  - Hoạt động trên track                                   │  │
+│  │  - Xử lý đoạn phim                                        │  │
 │  └──────────────────────────────────────────────────────────┘  │
 └───────────────────────────┬─────────────────────────────────────┘
                             │
                             ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│                    剪映 / CapCut                                 │
-│                    (视频编辑应用)                                 │
+│                  CapCut / JianYing                               │
+│                 (Ứng dụng chỉnh sửa video)                       │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## Skill 结构设计
+## Thiết Kế Cấu Trúc Skill
 
-### Claude Code Skill 规范
+### Quy Chuẩn Claude Code Skill của Anthropic
 
-本项目严格遵循 Anthropic 官方的 Skill 规范：
+Dự án này tuân thủ chặt chẽ quy chuẩn Skill chính thức của Anthropic:
 
-#### 1. 必需文件
+#### 1. Tệp Bắt Buộc
 
 ```
 skill/
-├── SKILL.md              # 必需 - 技能主文档
-└── [资源目录]            # 可选 - scripts/, references/, assets/
+├── SKILL.md              # Bắt buộc - Tài liệu chính của kỹ năng
+└── [Thư mục tài nguyên]  # Tùy chọn - scripts/, references/, assets/
 ```
 
-#### 2. SKILL.md 格式
+#### 2. Định Dạng SKILL.md
 
-SKILL.md 使用 YAML frontmatter 定义元数据：
+SKILL.md sử dụng YAML frontmatter để định nghĩa metadata:
 
 ```markdown
 ---
@@ -76,67 +76,67 @@ name: vectcut-api
 description: VectCutAPI is a powerful cloud-based video editing API...
 ---
 
-# 技能内容...
+# Nội dung kỹ năng...
 ```
 
-**元数据字段说明:**
-- `name`: 技能标识符（用于触发技能）
-- `description`: 技能描述（Claude 用于判断何时使用此技能）
+**Giải Thích Các Trường Metadata:**
+- `name`: Định danh kỹ năng (được sử dụng để kích hoạt kỹ năng)
+- `description`: Mô tả kỹ năng (Claude dùng để xác định khi nào sử dụng kỹ năng này)
 
-#### 3. 渐进式披露设计
+#### 3. Thiết Kế Tiết Lộ Dần Dần
 
-为了优化 token 使用，采用三级加载系统：
+Để tối ưu hóa việc sử dụng token, sử dụng hệ thống tải ba cấp:
 
-| 级别 | 内容 | 大小限制 | 加载时机 |
+| Cấp | Nội Dung | Giới Hạn Kích Thước | Thời Điểm Tải |
 |------|------|----------|----------|
-| **Metadata** | name + description | ~100 tokens | 始终加载 |
-| **SKILL.md body** | 核心使用指南 | <5k tokens | 技能触发时 |
-| **Bundled Resources** | scripts/references/assets | 无限制 | 按需加载 |
+| **Metadata** | name + description | ~100 tokens | Luôn tải |
+| **Phần thân SKILL.md** | Hướng dẫn sử dụng cốt lõi | <5k tokens | Khi kích hoạt kỹ năng |
+| **Tài Nguyên Đi Kèm** | scripts/references/assets | Không giới hạn | Tải theo yêu cầu |
 
 ---
 
-## Python 客户端设计
+## Thiết Kế Client Python
 
-### 设计原则
+### Nguyên Tắc Thiết Kế
 
-1. **简洁性** - 提供直观的 API 接口
-2. **类型安全** - 使用 dataclasses 和 Enum
-3. **资源管理** - 支持上下文管理器
-4. **错误处理** - 统一的错误处理机制
+1. **Tính Đơn Giản** - Cung cấp giao diện API trực quan
+2. **An Toàn Kiểu** - Sử dụng dataclasses và Enum
+3. **Quản Lý Tài Nguyên** - Hỗ trợ context manager
+4. **Xử Lý Lỗi** - Cơ chế xử lý lỗi thống nhất
 
-### 类结构
+### Cấu Trúc Lớp
 
 ```python
-# 数据类
+# Lớp dữ liệu
 @dataclass
 class DraftInfo:
-    """草稿信息"""
+    """Thông tin bản nháp"""
     draft_id: str
     draft_folder: Optional[str] = None
     draft_url: Optional[str] = None
 
 @dataclass
 class ApiResult:
-    """API 响应结果"""
+    """Kết quả phản hồi API"""
     success: bool
     output: Dict[str, Any]
     error: Optional[str] = None
 
-# 枚举类
+# Lớp liệt kê
 class Resolution(Enum):
-    """常用视频分辨率预设"""
+    """Cài đặt độ phân giải video phổ biến"""
     VERTICAL = (1080, 1920)
     HORIZONTAL = (1920, 1080)
     SQUARE = (1080, 1080)
 
 class Transition(Enum):
-    """转场效果类型"""
+    """Loại hiệu ứng chuyển cảnh"""
     FADE_IN = "fade_in"
     FADE_OUT = "fade_out"
 
-# 主客户端类
+# Lớp client chính
 class VectCutClient:
-    """VectCutAPI Python 客户端"""
+    """Client Python VectCutAPI"""
 
     def __init__(self, base_url: str, timeout: int = 120)
     def create_draft(...) -> DraftInfo
@@ -144,153 +144,153 @@ class VectCutClient:
     def add_video(...) -> bool
     def add_audio(...) -> bool
     def add_text(...) -> bool
-    # ... 更多方法
+    # ... Thêm các phương thức khác
 
     def __enter__(self)
     def __exit__(self, exc_type, exc_val, exc_tb)
 ```
 
-### 方法设计模式
+### Mẫu Thiết Kế Phương Thức
 
-#### 1. 创建型方法
+#### 1. Phương Thức Tạo
 
 ```python
 def create_draft(self, width: int = 1080, height: int = 1920) -> DraftInfo:
     """
-    创建新草稿
+    Tạo bản nháp mới
 
     Args:
-        width: 视频宽度
-        height: 视频高度
+        width: Chiều rộng video
+        height: Chiều cao video
 
     Returns:
-        DraftInfo: 草稿信息对象
+        DraftInfo: Đối tượng thông tin bản nháp
 
     Raises:
-        Exception: 创建失败时抛出异常
+        Exception: Bắt ra ngoại lệ khi tạo thất bại
     """
 ```
 
-#### 2. 操作型方法
+#### 2. Phương Thức Hoạt Động
 
 ```python
 def add_video(self,
              draft_id: str,
              video_url: str,
              start: float = 0,
-             # ... 更多参数
+             # ... Thêm tham số
              **kwargs) -> bool:
     """
-    添加视频轨道
+    Thêm track video
 
     Args:
-        draft_id: 草稿 ID
-        video_url: 视频 URL
+        draft_id: ID bản nháp
+        video_url: URL video
         ...
 
     Returns:
-        bool: 操作是否成功
+        bool: Liệu hoạt động có thành công hay không
     """
 ```
 
-#### 3. 查询型方法
+#### 3. Phương Thức Truy Vấn
 
 ```python
 def get_duration(self, media_url: str) -> Optional[float]:
     """
-    获取媒体文件时长
+    Lấy thời lượng của tệp media
 
     Args:
-        media_url: 媒体 URL
+        media_url: URL media
 
     Returns:
-        Optional[float]: 时长(秒)，失败返回 None
+        Optional[float]: Thời lượng (giây), trả về None nếu thất bại
     """
 ```
 
 ---
 
-## 文档组织结构
+## Cấu Trúc Tổ Chức Tài Liệu
 
-### 1. SKILL.md (主文档)
+### 1. SKILL.md (Tài Liệu Chính)
 
-**内容组织:**
-- Overview - 技能概述
-- System Requirements - 系统要求
-- Quick Start - 快速开始
-- Workflow - 标准工作流程
-- API Interfaces - API 接口列表
-- Usage Examples - 使用示例
-- MCP Integration - MCP 协议集成
-- Parameters - 参数说明
+**Tổ Chức Nội Dung:**
+- Tổng Quan - Giới thiệu về kỹ năng
+- Yêu Cầu Hệ Thống - Các yêu cầu hệ thống
+- Bắt Đầu Nhanh - Khởi động nhanh
+- Workflow - Quy trình công việc tiêu chuẩn
+- Giao Diện API - Danh sách giao diện API
+- Ví Dụ Sử Dụng - Các ví dụ sử dụng
+- Tích Hợp MCP - Tích hợp giao thức MCP
+- Tham Số - Giải thích tham số
 
-**设计原则:**
-- 保持在 500 行以内
-- 只包含核心流程和必要信息
-- 详细内容放入 references/
+**Nguyên Tắc Thiết Kế:**
+- Giữ dưới 500 dòng
+- Chỉ bao gồm quy trình cốt lõi và thông tin cần thiết
+- Đặt nội dung chi tiết vào references/
 
-### 2. references/ (参考文档)
+### 2. references/ (Tài Liệu Tham Khảo)
 
-**api_reference.md** - 完整 API 参考
-- 所有 HTTP 端点的详细说明
-- 请求参数和响应格式
-- 错误处理说明
-- 参数类型和默认值
+**api_reference.md** - Tham Khảo API Đầy Đủ
+- Mô tả chi tiết tất cả các endpoint HTTP
+- Định dạng tham số yêu cầu và phản hồi
+- Giải thích xử lý lỗi
+- Loại tham số và giá trị mặc định
 
-**workflows.md** - 工作流示例
-- 8+ 种常见场景的完整代码
-- 每个示例包含详细注释
-- 最佳实践说明
+**workflows.md** - Ví Dụ Workflow
+- Mã hoàn chỉnh cho 8+ kịch bản phổ biến
+- Mỗi ví dụ bao gồm chú thích chi tiết
+- Giải thích các thực hành tốt nhất
 
-### 3. scripts/ (可执行代码)
+### 3. scripts/ (Mã Thực Thi)
 
-**vectcut_client.py** - Python 客户端
-- 可直接导入使用
-- 可作为独立脚本运行
-- 包含完整的类型注解
+**vectcut_client.py** - Client Python
+- Có thể nhập trực tiếp và sử dụng
+- Có thể chạy như một script độc lập
+- Bao gồm type annotation đầy đủ
 
 ---
 
-## API 映射关系
+## Quan Hệ Ánh Xạ API
 
-### HTTP API → 客户端方法映射
+### Ánh Xạ HTTP API → Phương Thức Client
 
-| HTTP API | 客户端方法 | 说明 |
+| HTTP API | Phương Thức Client | Mô Tả |
 |----------|-----------|------|
-| POST /create_draft | `create_draft()` | 创建草稿 |
-| POST /save_draft | `save_draft()` | 保存草稿 |
-| POST /add_video | `add_video()` | 添加视频 |
-| POST /add_audio | `add_audio()` | 添加音频 |
-| POST /add_image | `add_image()` | 添加图片 |
-| POST /add_text | `add_text()` | 添加文字 |
-| POST /add_subtitle | `add_subtitle()` | 添加字幕 |
-| POST /add_sticker | `add_sticker()` | 添加贴纸 |
-| POST /add_effect | `add_effect()` | 添加特效 |
-| POST /add_video_keyframe | `add_video_keyframe()` | 添加关键帧 |
-| POST /get_duration | `get_duration()` | 获取时长 |
-| GET /get_*_types | `get_*_types()` | 获取类型列表 |
+| POST /create_draft | `create_draft()` | Tạo bản nháp |
+| POST /save_draft | `save_draft()` | Lưu bản nháp |
+| POST /add_video | `add_video()` | Thêm video |
+| POST /add_audio | `add_audio()` | Thêm âm thanh |
+| POST /add_image | `add_image()` | Thêm hình ảnh |
+| POST /add_text | `add_text()` | Thêm văn bản |
+| POST /add_subtitle | `add_subtitle()` | Thêm phụ đề |
+| POST /add_sticker | `add_sticker()` | Thêm sticker |
+| POST /add_effect | `add_effect()` | Thêm hiệu ứng |
+| POST /add_video_keyframe | `add_video_keyframe()` | Thêm keyframe |
+| POST /get_duration | `get_duration()` | Lấy thời lượng |
+| GET /get_*_types | `get_*_types()` | Lấy danh sách loại |
 
 ---
 
-## 数据流设计
+## Thiết Kế Luồng Dữ Liệu
 
-### 视频制作数据流
+### Luồng Dữ Liệu Tạo Video
 
 ```
-用户请求
+Yêu Cầu Người Dùng
     │
     ▼
-Claude 解析意图
+Claude Phân Tích Ý Định
     │
     ▼
-加载 vectcut-api Skill
+Tải Skill vectcut-api
     │
     ▼
-调用 Python 客户端
+Gọi Client Python
     │
     ▼
 ┌─────────────────────────────────────────┐
-│ VectCutClient 方法调用                  │
+│ Gọi Phương Thức VectCutClient           │
 │  ┌───────────────────────────────────┐ │
 │  │ 1. create_draft()                 │ │
 │  │ 2. add_video()                    │ │
@@ -302,7 +302,7 @@ Claude 解析意图
                   │
                   ▼
 ┌─────────────────────────────────────────┐
-│ HTTP 请求 (requests 库)                 │
+│ Yêu Cầu HTTP (Thư viện requests)       │
 │  POST http://localhost:9001/...        │
 └─────────────────┬───────────────────────┘
                   │
@@ -315,12 +315,12 @@ Claude 解析意图
                   ▼
 ┌─────────────────────────────────────────┐
 │ pyJianYingDraft                         │
-│  生成剪映草稿文件                        │
+│  Tạo tệp bản nháp JianYing             │
 └─────────────────┬───────────────────────┘
                   │
                   ▼
 ┌─────────────────────────────────────────┐
-│ 草稿文件 (dfd_xxxxx/)                   │
+│ Tệp Bản Nháp (dfd_xxxxx/)               │
 │  - draft_content.json                   │
 │  - material_*.json                      │
 └─────────────────────────────────────────┘
@@ -328,13 +328,13 @@ Claude 解析意图
 
 ---
 
-## 错误处理机制
+## Cơ Chế Xử Lý Lỗi
 
-### 1. API 响应处理
+### 1. Xử Lý Phản Hồi API
 
 ```python
 def _post(self, endpoint: str, **kwargs) -> ApiResult:
-    """发送 POST 请求"""
+    """Gửi yêu cầu POST"""
     try:
         response = self.session.post(url, json=kwargs, timeout=self.timeout)
         response.raise_for_status()
@@ -348,68 +348,68 @@ def _post(self, endpoint: str, **kwargs) -> ApiResult:
         return ApiResult(success=False, output={}, error=str(e))
 ```
 
-### 2. 方法级别错误处理
+### 2. Xử Lý Lỗi Ở Mức Phương Thức
 
 ```python
 def create_draft(self, ...) -> DraftInfo:
     result = self._post("/create_draft", ...)
     if result.success:
         return DraftInfo(...)
-    raise Exception(f"创建草稿失败: {result.error}")
+    raise Exception(f"Tạo bản nháp thất bại: {result.error}")
 ```
 
 ---
 
-## 扩展性设计
+## Thiết Kế Khả Năng Mở Rộng
 
-### 1. 预设值扩展
+### 1. Mở Rộng Giá Trị Cài Đặt
 
-通过 Enum 类型轻松添加新的预设：
+Dễ dàng thêm các cài đặt mới thông qua lớp Enum:
 
 ```python
 class Resolution(Enum):
     VERTICAL = (1080, 1920)
     HORIZONTAL = (1920, 1080)
     SQUARE = (1080, 1080)
-    # 新增
+    # Thêm mới
     WIDE = (1920, 1200)
 ```
 
-### 2. 自定义参数
+### 2. Tham Số Tùy Chỉnh
 
-所有方法支持 `**kwargs` 传递额外参数：
+Tất cả các phương thức hỗ trợ truyền tham số bổ sung thông qua `**kwargs`:
 
 ```python
 client.add_video(draft_id, video_url, custom_param="value")
 ```
 
-### 3. 工作流复用
+### 3. Tái Sử Dụng Workflow
 
-示例代码可作为模板快速复用：
+Mã ví dụ có thể được sử dụng như template để tái sử dụng nhanh chóng:
 
 ```python
-# 从 workflows.md 复制模板
-# 修改参数即可使用
+# Sao chép template từ workflows.md
+# Sửa đổi tham số để sử dụng
 ```
 
 ---
 
-## 性能优化
+## Tối Ưu Hóa Hiệu Suất
 
-### 1. 连接复用
+### 1. Tái Sử Dụng Kết Nối
 
 ```python
-self.session = requests.Session()  # 复用 TCP 连接
+self.session = requests.Session()  # Tái sử dụng kết nối TCP
 ```
 
-### 2. 按需加载
+### 2. Tải Theo Yêu Cầu
 
-- SKILL.md 保持精简
-- 详细文档按需加载到 references/
+- Giữ SKILL.md gọn nhẹ
+- Tải tài liệu chi tiết theo yêu cầu vào references/
 
-### 3. 异步支持 (未来)
+### 3. Hỗ Trợ Bất Đồng Bộ (Trong Tương Lai)
 
-可扩展支持异步请求：
+Có thể mở rộng hỗ trợ yêu cầu bất đồng bộ:
 
 ```python
 async def add_video_async(self, ...):
@@ -419,31 +419,31 @@ async def add_video_async(self, ...):
 
 ---
 
-## 安全考虑
+## Xem Xét Bảo Mật
 
-### 1. URL 验证
+### 1. Xác Thực URL
 
-客户端不验证 URL，由 VectCutAPI 服务端负责
+Client không xác thực URL, được áp dụng bởi phía máy chủ VectCutAPI
 
-### 2. 超时控制
+### 2. Kiểm Soát Timeout
 
-默认 120 秒超时，防止长时间阻塞
+Timeout mặc định 120 giây, ngăn chặn bị block lâu dài
 
-### 3. 资源管理
+### 3. Quản Lý Tài Nguyên
 
-支持上下文管理器确保资源释放：
+Hỗ trợ context manager đảm bảo giải phóng tài nguyên:
 
 ```python
 with VectCutClient() as client:
-    # 自动关闭连接
+    # Tự động đóng kết nối
     ...
 ```
 
 ---
 
-## 测试策略
+## Chiến Lược Kiểm Thử
 
-### 1. 单元测试 (计划中)
+### 1. Kiểm Thử Đơn Vị (Lên Kế Hoạch)
 
 ```python
 def test_create_draft():
@@ -452,52 +452,52 @@ def test_create_draft():
     assert draft.draft_id is not None
 ```
 
-### 2. 集成测试 (计划中)
+### 2. Kiểm Thử Tích Hợp (Lên Kế Hoạch)
 
 ```python
 def test_full_workflow():
-    # 测试完整的视频制作流程
+    # Kiểm thử quy trình tạo video hoàn chỉnh
     ...
 ```
 
 ---
 
-## 依赖关系
+## Quan Hệ Phụ Thuộc
 
 ```
 vectcut-skill
     │
     ├── Python 3.10+
     │
-    ├── requests (HTTP 库)
+    ├── requests (Thư viện HTTP)
     │
-    ├── dataclasses (Python 标准库)
+    ├── dataclasses (Thư viện chuẩn Python)
     │
-    ├── typing (Python 标准库)
+    ├── typing (Thư viện chuẩn Python)
     │
-    └── VectCutAPI (外部依赖)
+    └── VectCutAPI (Phụ thuộc bên ngoài)
             │
             ├── Flask
             ├── pyJianYingDraft
-            └── 剪映/CapCut
+            └── JianYing/CapCut
 ```
 
 ---
 
-## 未来计划
+## Kế Hoạch Tương Lai
 
-### 短期目标
+### Mục Tiêu Ngắn Hạn
 
-- [ ] 添加单元测试
-- [ ] 添加更多工作流示例
-- [ ] 支持异步请求
-- [ ] 添加 CLI 工具
+- [ ] Thêm kiểm thử đơn vị
+- [ ] Thêm nhiều ví dụ workflow
+- [ ] Hỗ trợ yêu cầu bất đồng bộ
+- [ ] Thêm công cụ CLI
 
-### 长期目标
+### Mục Tiêu Dài Hạn
 
-- [ ] 支持更多视频平台
-- [ ] Web UI 界面
-- [ ] 云端部署方案
+- [ ] Hỗ trợ nhiều nền tảng video khác
+- [ ] Giao diện Web UI
+- [ ] Giải pháp triển khai trên cloud
 - [ ] 插件系统
 
 ---
