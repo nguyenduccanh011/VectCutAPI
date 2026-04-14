@@ -16,6 +16,45 @@ VectCutAPI là một công cụ API chỉnh sửa video mạnh mẽ dựa trên 
 3. **Chỉnh Sửa Lần Thứ Hai** - Nhập vào CapCut/JianYing để tinh chỉnh
 4. **Xử Lý Trên Đám Mây** - Hoàn toàn trên đám mây để tạo video
 
+---
+
+## ⚠️ Điều Kiện Tiên Quyết - BẮT BUỘC PHẢI LÀM TRƯỚC KHI SỬ DỤNG SKILL
+
+**Skill này cần server VectCutAPI chạy ở nền để hoạt động. Vui lòng làm theo các bước sau:**
+
+### Bước 1: Cài Đặt VectCutAPI Repository
+
+```bash
+git clone https://github.com/nguyenduccanh011/VectCutAPI.git
+cd VectCutAPI
+python -m venv venv-vectcut
+# Windows: venv-vectcut\Scripts\activate
+# macOS/Linux: source venv-vectcut/bin/activate
+pip install -r requirements.txt
+```
+
+### Bước 2: Khởi Động Server (QUAN TRỌNG ⚡)
+
+```bash
+python capcut_server.py
+```
+
+**Kết quả thành công sẽ hiển thị:**
+```
+ * Running on http://localhost:9001
+```
+
+### Bước 3: Xác Minh Server Chạy
+
+Mở trình duyệt hoặc dùng curl:
+```bash
+curl http://localhost:9001/
+```
+
+**Nếu server không chạy:**
+- ❌ Skill sẽ không thể hoạt động
+- ❌ Copilot sẽ báo lỗi kết nối
+
 ### Yêu Cầu Hệ Thống
 
 - Python 3.10+

@@ -1,0 +1,58 @@
+{
+  "timestamp": "2026-04-14",
+  "server": "http://localhost:9001",
+  "transitions": {
+    "count": 0,
+    "list": []
+  },
+  "all_effects": {
+    "🔄 Hiệu Ứng Chuyển Tiếp (Transitions)": {
+      "count": 0,
+      "list": []
+    },
+    "📹 Hoạt Ảnh Vào Video (Intro)": {
+      "count": 0,
+      "list": []
+    },
+    "📹 Hoạt Ảnh Ra Video (Outro)": {
+      "count": 0,
+      "list": []
+    },
+    "✨ Hoạt Ảnh Kết Hợp (Combo)": {
+      "count": 0,
+      "list": []
+    },
+    "📝 Hoạt Ảnh Vào Văn Bản": {
+      "count": 0,
+      "list": []
+    },
+    "📝 Hoạt Ảnh Ra Văn Bản": {
+      "count": 0,
+      "list": []
+    },
+    "📝 Hoạt Ảnh Lặp Văn Bản": {
+      "count": 0,
+      "list": []
+    },
+    "🎭 Kiểu Mặt Nạ (Masks)": {
+      "count": 0,
+      "list": []
+    },
+    "🔊 Hiệu Ứng Âm Thanh": {
+      "count": 0,
+      "list": []
+    },
+    "🎬 Hiệu Ứng Cảnh": {
+      "count": 0,
+      "list": []
+    },
+    "👤 Hiệu Ứng Ký Tự": {
+      "count": 0,
+      "list": []
+    },
+    "🔤 Phông Chữ": {
+      "count": 0,
+      "list": []
+    }
+  }
+}

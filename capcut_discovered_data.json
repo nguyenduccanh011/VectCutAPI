@@ -1,0 +1,354 @@
+{
+  "transitions": [
+    {
+      "draft": "dfd_cat_1776073660_3c2f9a7a",
+      "name": "Dissolve",
+      "resource_id": "6724846004274729480",
+      "effect_id": "392FD26E-A514-4d0f-8950-EA4A20CB407C",
+      "duration": 466666,
+      "category_name": "",
+      "is_overlap": false
+    },
+    {
+      "draft": "dfd_cat_1776073660_3c2f9a7a",
+      "name": "Dissolve",
+      "resource_id": "6724846004274729480",
+      "effect_id": "392FD26E-A514-4d0f-8950-EA4A20CB407C",
+      "duration": 466666,
+      "category_name": "",
+      "is_overlap": false
+    },
+    {
+      "draft": "dfd_cat_1776073660_3c2f9a7a",
+      "name": "Dissolve",
+      "resource_id": "6724846004274729480",
+      "effect_id": "392FD26E-A514-4d0f-8950-EA4A20CB407C",
+      "duration": 466666,
+      "category_name": "",
+      "is_overlap": false
+    },
+    {
+      "draft": "dfd_cat_1776073660_3c2f9a7a",
+      "name": "Dissolve",
+      "resource_id": "6724846004274729480",
+      "effect_id": "392FD26E-A514-4d0f-8950-EA4A20CB407C",
+      "duration": 466666,
+      "category_name": "",
+      "is_overlap": false
+    }
+  ],
+  "effects": [
+    {
+      "draft": "VD20",
+      "name": "",
+      "resource_id": "6753115084848894467",
+      "effect_id": "",
+      "category_name": "",
+      "type": "text_effect"
+    },
+    {
+      "draft": "VD20",
+      "name": "",
+      "resource_id": "7502024543519771965",
+      "effect_id": "",
+      "category_name": "",
+      "type": "text_effect"
+    },
+    {
+      "draft": "VD20",
+      "name": "",
+      "resource_id": "7463793354258599229",
+      "effect_id": "",
+      "category_name": "",
+      "type": "text_effect"
+    },
+    {
+      "draft": "VD20",
+      "name": "",
+      "resource_id": "7463793354258599229",
+      "effect_id": "",
+      "category_name": "",
+      "type": "text_effect"
+    },
+    {
+      "draft": "VD20",
+      "name": "",
+      "resource_id": "7463793354258599229",
+      "effect_id": "",
+      "category_name": "",
+      "type": "text_effect"
+    },
+    {
+      "draft": "VD20",
+      "name": "",
+      "resource_id": "7463793354258599229",
+      "effect_id": "",
+      "category_name": "",
+      "type": "text_effect"
+    },
+    {
+      "draft": "VD20",
+      "name": "",
+      "resource_id": "7463793354258599229",
+      "effect_id": "",
+      "category_name": "",
+      "type": "text_effect"
+    },
+    {
+      "draft": "VD20",
+      "name": "",
+      "resource_id": "7463793354258599229",
+      "effect_id": "",
+      "category_name": "",
+      "type": "text_effect"
+    },
+    {
+      "draft": "VD20",
+      "name": "",
+      "resource_id": "7463793354258599229",
+      "effect_id": "",
+      "category_name": "",
+      "type": "text_effect"
+    },
+    {
+      "draft": "VD20",
+      "name": "",
+      "resource_id": "7463793354258599229",
+      "effect_id": "",
+      "category_name": "",
+      "type": "text_effect"
+    },
+    {
+      "draft": "VD20",
+      "name": "",
+      "resource_id": "7463793354258599229",
+      "effect_id": "",
+      "category_name": "",
+      "type": "text_effect"
+    },
+    {
+      "draft": "VD20",
+      "name": "",
+      "resource_id": "7463793354258599229",
+      "effect_id": "",
+      "category_name": "",
+      "type": "text_effect"
+    },
+    {
+      "draft": "VD20",
+      "name": "",
+      "resource_id": "7463793354258599229",
+      "effect_id": "",
+      "category_name": "",
+      "type": "text_effect"
+    },
+    {
+      "draft": "VD20",
+      "name": "",
+      "resource_id": "7463793354258599229",
+      "effect_id": "",
+      "category_name": "",
+      "type": "text_effect"
+    },
+    {
+      "draft": "VD20",
+      "name": "",
+      "resource_id": "7463793354258599229",
+      "effect_id": "",
+      "category_name": "",
+      "type": "text_effect"
+    },
+    {
+      "draft": "VD20",
+      "name": "",
+      "resource_id": "7463793354258599229",
+      "effect_id": "",
+      "category_name": "",
+      "type": "text_effect"
+    },
+    {
+      "draft": "VD20",
+      "name": "",
+      "resource_id": "7463793354258599229",
+      "effect_id": "",
+      "category_name": "",
+      "type": "text_effect"
+    },
+    {
+      "draft": "VD20",
+      "name": "",
+      "resource_id": "7463793354258599229",
+      "effect_id": "",
+      "category_name": "",
+      "type": "text_effect"
+    },
+    {
+      "draft": "VD20",
+      "name": "",
+      "resource_id": "7463793354258599229",
+      "effect_id": "",
+      "category_name": "",
+      "type": "text_effect"
+    },
+    {
+      "draft": "VD20",
+      "name": "",
+      "resource_id": "7463793354258599229",
+      "effect_id": "",
+      "category_name": "",
+      "type": "text_effect"
+    },
+    {
+      "draft": "VD20",
+      "name": "",
+      "resource_id": "7463793354258599229",
+      "effect_id": "",
+      "category_name": "",
+      "type": "text_effect"
+    },
+    {
+      "draft": "VD20",
+      "name": "",
+      "resource_id": "7463793354258599229",
+      "effect_id": "",
+      "category_name": "",
+      "type": "text_effect"
+    },
+    {
+      "draft": "VD20",
+      "name": "",
+      "resource_id": "7463793354258599229",
+      "effect_id": "",
+      "category_name": "",
+      "type": "text_effect"
+    },
+    {
+      "draft": "VD20",
+      "name": "",
+      "resource_id": "7463793354258599229",
+      "effect_id": "",
+      "category_name": "",
+      "type": "text_effect"
+    },
+    {
+      "draft": "VD20",
+      "name": "",
+      "resource_id": "7463793354258599229",
+      "effect_id": "",
+      "category_name": "",
+      "type": "text_effect"
+    },
+    {
+      "draft": "VD20",
+      "name": "",
+      "resource_id": "7463793354258599229",
+      "effect_id": "",
+      "category_name": "",
+      "type": "text_effect"
+    },
+    {
+      "draft": "VD20",
+      "name": "",
+      "resource_id": "7463793354258599229",
+      "effect_id": "",
+      "category_name": "",
+      "type": "text_effect"
+    }
+  ],
+  "video_effects": [],
+  "animations": [
+    {
+      "draft": "VD20",
+      "name": "Flash Out",
+      "resource_id": "7211044782489997825",
+      "effect_id": "7211044782489997825",
+      "category_name": "Out",
+      "type": "out",
+      "start": 2866666,
+      "duration": 133333
+    },
+    {
+      "draft": "VD20",
+      "name": "Flash In",
+      "resource_id": "7211044701367964162",
+      "effect_id": "7211044701367964162",
+      "category_name": "In",
+      "type": "in",
+      "start": 0,
+      "duration": 466666
+    },
+    {
+      "draft": "VD20",
+      "name": "",
+      "resource_id": "7080126475633955329",
+      "effect_id": "",
+      "category_name": "",
+      "type": "loop",
+      "start": 0,
+      "duration": 3000000
+    },
+    {
+      "draft": "VD20",
+      "name": "",
+      "resource_id": "7130497469019853314",
+      "effect_id": "",
+      "category_name": "",
+      "type": "in",
+      "start": 0,
+      "duration": 500000
+    },
+    {
+      "draft": "VD20",
+      "name": "",
+      "resource_id": "7314651687149376001",
+      "effect_id": "",
+      "category_name": "",
+      "type": "in",
+      "start": 0,
+      "duration": 1200000
+    },
+    {
+      "draft": "VD20",
+      "name": "",
+      "resource_id": "7130497469019853314",
+      "effect_id": "",
+      "category_name": "",
+      "type": "in",
+      "start": 0,
+      "duration": 500000
+    },
+    {
+      "draft": "VD20",
+      "name": "",
+      "resource_id": "7314651687149376001",
+      "effect_id": "",
+      "category_name": "",
+      "type": "in",
+      "start": 0,
+      "duration": 1200000
+    },
+    {
+      "draft": "VD20",
+      "name": "",
+      "resource_id": "7209405021744534018",
+      "effect_id": "",
+      "category_name": "",
+      "type": "in",
+      "start": 0,
+      "duration": 500000
+    },
+    {
+      "draft": "VD20",
+      "name": "",
+      "resource_id": "7287805011394826754",
+      "effect_id": "",
+      "category_name": "",
+      "type": "in",
+      "start": 0,
+      "duration": 500000
+    }
+  ],
+  "audio_effects": [],
+  "stickers": [],
+  "filters": []
+}
