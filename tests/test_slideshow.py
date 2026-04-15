@@ -5,7 +5,9 @@ Transition giữa các ảnh: Dissolve
 """
 import shutil
 import os
-from example import (
+import sys
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from examples.example import (
     add_image_impl,
     add_video_keyframe_impl,
     save_draft_impl,

@@ -3,9 +3,12 @@
 Tạo slideshow từ template JSON một cách tự động
 """
 
+import sys
+import os
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from template_processor import TemplateProcessor, create_default_slideshow_template
 import json
-import os
 
 def example_1_basic_slideshow():
     """

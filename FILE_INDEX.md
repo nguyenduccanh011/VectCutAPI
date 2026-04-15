@@ -57,7 +57,7 @@
 
 ### Template Development Tools
 
-8. **[template_preview.py](template_preview.py)** (400 dòng)
+8. **[tools/template_preview.py](tools/template_preview.py)** (400 dòng)
    - TemplatePreviewTool class
    - Preview template settings
    - Validate structure
@@ -67,10 +67,10 @@
    
    **Sử dụng**:
    ```bash
-   python template_preview.py template/my-slideshow.json
+   python tools/template_preview.py template/my-slideshow.json
    ```
 
-9. **[draft_to_template.py](draft_to_template.py)** (450 dòng)
+9. **[tools/draft_to_template.py](tools/draft_to_template.py)** (450 dòng)
    - DraftToTemplateConverter class
    - Export CapCut draft → template JSON
    - List available drafts
@@ -79,8 +79,8 @@
    
    **Sử dụng**:
    ```bash
-   python draft_to_template.py --list
-   python draft_to_template.py --draft "path/to/draft" "template-name" 5
+   python tools/draft_to_template.py --list
+   python tools/draft_to_template.py --draft "path/to/draft" "template-name" 5
    ```
 
 ### Existing Files (Used Together)
@@ -98,7 +98,7 @@
     result = processor.render({"image_0": "url1", ...})
     ```
 
-11. **[template_examples.py](template_examples.py)** (800+ dòng)
+11. **[examples/template_examples.py](examples/template_examples.py)** (800+ dòng)
     - 5 ví dụ thực hành
     - Example 1: Basic slideshow
     - Example 2: Custom template (5 images + pan)
@@ -108,8 +108,8 @@
     
     **Sử dụng**:
     ```bash
-    python template_examples.py          # Chạy tất cả
-    python template_examples.py 1        # Specific example
+    python examples/template_examples.py          # Chạy tất cả
+    python examples/template_examples.py 1        # Specific example
     ```
 
 ---
@@ -118,18 +118,18 @@
 
 ### Use Case 1: Tôi muốn tạo template từ CapCut draft
 **Files needed**: 
-- [draft_to_template.py](draft_to_template.py) ← export
-- [template_preview.py](template_preview.py) ← validate
+- [tools/draft_to_template.py](tools/draft_to_template.py) ← export
+- [tools/template_preview.py](tools/template_preview.py) ← validate
 - [template_processor.py](template_processor.py) ← test
 - [TEMPLATE_DEVELOPMENT_GUIDE.md](TEMPLATE_DEVELOPMENT_GUIDE.md) ← guide
 
 **Steps**:
 ```bash
 # 1. Export
-python draft_to_template.py --draft "path/to/draft" "my-template" 5
+python tools/draft_to_template.py --draft "path/to/draft" "my-template" 5
 
 # 2. Preview
-python template_preview.py template/my-template.json
+python tools/template_preview.py template/my-template.json
 
 # 3. Test
 # Run template_processor code
@@ -137,19 +137,19 @@ python template_preview.py template/my-template.json
 
 ### Use Case 2: Tôi muốn tùy chỉnh template hiện tại
 **Files needed**:
-- [template_preview.py](template_preview.py) ← see current settings
+- [tools/template_preview.py](tools/template_preview.py) ← see current settings
 - [QUICKSTART_TEMPLATES.md](QUICKSTART_TEMPLATES.md) ← reference keyframes
 - [template_processor.py](template_processor.py) ← test
 
 **Steps**:
 ```bash
 # 1. Preview current
-python template_preview.py template/my-template.json
+python tools/template_preview.py template/my-template.json
 
 # 2. Edit template/*.json (JSON file)
 
 # 3. Preview again
-python template_preview.py template/my-template.json
+python tools/template_preview.py template/my-template.json
 
 # 4. Test render
 # Run template_processor code

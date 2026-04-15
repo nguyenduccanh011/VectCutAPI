@@ -1,6 +1,9 @@
+import sys
+import os
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 import requests
 import json
-import sys
 import time
 from settings.local import PORT, DRAFT_FOLDER
 from util import timing_decorator

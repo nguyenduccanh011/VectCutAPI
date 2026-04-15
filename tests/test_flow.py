@@ -4,7 +4,8 @@ Script kiểm tra flow: video + image overlay + audio + text
 import shutil
 import os
 import sys
-from example import (
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from examples.example import (
     add_video_impl,
     add_image_impl,
     add_audio_track,

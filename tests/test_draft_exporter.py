@@ -1,5 +1,9 @@
 """Test Draft Exporter - kiểm tra export CapCut draft → template"""
 
+import sys
+import os
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 import json
 import os
 import tempfile
